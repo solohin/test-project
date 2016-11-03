@@ -45,8 +45,7 @@ class LoginController
     private function getNewToken($userId)
     {
         do {
-            $randomStr = rand(1000000, 100000000) . rand(1000000, 100000000);
-            $token = password_hash($randomStr, PASSWORD_DEFAULT);
+            $token = password_hash(random_bytes(1024), PASSWORD_DEFAULT);
         } while ($this->usersService->isTokenExists($token));
         $user['token'] = $token;
         $this->usersService->update($userId, ['token' => $token]);

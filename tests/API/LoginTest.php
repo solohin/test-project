@@ -6,7 +6,7 @@
  * Date: 03/11/16
  * Time: 14:41
  */
-namespace Tests\API;
+namespace Solohin\ToptalExam\Tests\API;
 
 use Silex\WebTestCase;
 use Solohin\ToptalExam\Services\UsersService;

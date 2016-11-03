@@ -16,23 +16,30 @@ class UsersService extends BaseService
         return isset($result['token_exists']);
     }
 
+    /**
+     * @param $username
+     * @return array|false
+     */
     public function getByUsername($username)
     {
         return $this->db->fetchAssoc("SELECT id, username, password_hash as password, token FROM users WHERE username=?", [$username]);
     }
 
-    public function getAll()
-    {
-        return $this->db->fetchAll("SELECT id, username, password_hash as password, token FROM users");
-    }
-
     public function insert($user)
     {
+        if(!isset($user['roles']) || is_null($user['roles'])){
+            $user['roles'] = '';
+        }
         $user = $this->prepareToSave($user);
         $this->db->insert("users", $user);
         return $this->db->lastInsertId();
     }
 
+    /**
+     * @param $id
+     * @param $user array ['username', 'password', 'token'], password will be hashed
+     * @return int
+     */
     public function update($id, $user)
     {
         $user = $this->prepareToSave($user);
