@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class RegistrationController
 {
     const MIN_USERNAME = 4;
-    const MAX_USERNAME = 12;
+    const MAX_USERNAME = 32;
     const MIN_PASSWORD = 6;
     const MAX_PASSWORD = 64;
 

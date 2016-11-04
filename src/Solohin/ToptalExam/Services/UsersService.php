@@ -41,9 +41,6 @@ class UsersService extends BaseService
         do {
             $token = password_hash(random_bytes(1024), PASSWORD_DEFAULT);
         } while ($this->isTokenExists($token));
-        if (!is_null($userId)) {
-            $this->update($userId, ['token' => $token]);
-        }
         return $token;
     }
 

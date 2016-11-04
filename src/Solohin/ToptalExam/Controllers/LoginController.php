@@ -35,7 +35,7 @@ class LoginController
         } else {
             //all correct
             $response['success'] = true;
-            $response['token'] = $this->usersService->generateUniqueToken($user['id']);
+            $response['token'] = $user['token'];
         }
         return new JsonResponse($response);
     }

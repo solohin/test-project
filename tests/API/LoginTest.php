@@ -78,8 +78,8 @@ class LoginTest extends WebTestCase
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
 
-        $this->assertContains('incorrect', mb_strtolower($rawResponse));
-        $this->assertContains('password', mb_strtolower($rawResponse));
+        $this->assertContains('incorrect', mb_strtolower($responseData['error_message']));
+        $this->assertContains('password', mb_strtolower($responseData['error_message']));
     }
 
     public function testIncorrectLogin()
