@@ -4,7 +4,6 @@ namespace Solohin\ToptalExam\Services;
 
 class UsersService extends BaseService
 {
-
     public function getOne($id)
     {
         return $this->db->fetchAssoc("SELECT id, username, password_hash as password, token FROM users WHERE id=?", [(int)$id]);
@@ -27,17 +26,30 @@ class UsersService extends BaseService
 
     public function insert($user)
     {
-        if(!isset($user['roles']) || is_null($user['roles'])){
+        if (!isset($user['roles']) || is_null($user['roles'])) {
             $user['roles'] = '';
         }
+        $user['token'] = $this->generateUniqueToken();
+
         $user = $this->prepareToSave($user);
         $this->db->insert("users", $user);
         return $this->db->lastInsertId();
     }
 
+    public function generateUniqueToken($userId = null)
+    {
+        do {
+            $token = password_hash(random_bytes(1024), PASSWORD_DEFAULT);
+        } while ($this->isTokenExists($token));
+        if (!is_null($userId)) {
+            $this->update($userId, ['token' => $token]);
+        }
+        return $token;
+    }
+
     /**
      * @param $id
-     * @param $user array ['username', 'password', 'token'], password will be hashed
+     * @param $user array ['username', 'password', 'token'], password will be hashed. empty token will be generated
      * @return int
      */
     public function update($id, $user)

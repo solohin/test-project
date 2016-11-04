@@ -51,13 +51,13 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('test 1', $firstItem['username']);
         $this->assertNotEquals('testpass', $firstItem['password']);
-        $this->assertEquals('some token1', $firstItem['token']);
+        $this->assertNotEquals('some token1', $firstItem['token']);
         $this->assertEquals('1', $firstItem['id']);
 
 
         $this->assertEquals('test 2', $secondItem['username']);
         $this->assertNotEquals('testpass', $secondItem['password']);
-        $this->assertEquals('some token2', $secondItem['token']);
+        $this->assertNotEquals('some token2', $secondItem['token']);
         $this->assertEquals('2', $secondItem['id']);
 
         $thirdItem = $this->usersService->getOne(99);
@@ -96,7 +96,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
 
         $testUser = $this->usersService->getOne($insertId);
 
-        $this->assertEquals((string)$insertId, $testUser['id']);
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
     }
 
     public function testUpdate()

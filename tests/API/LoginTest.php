@@ -39,7 +39,7 @@ class LoginTest extends WebTestCase
         $this->assertTrue($responseData['success'], 'Raw response is ' . $rawResponse);
     }
 
-    public function testTokenRehreshed()
+    public function testTokenRefreshed()
     {
         $client = $this->createClient();
 
@@ -101,8 +101,8 @@ class LoginTest extends WebTestCase
         $this->assertFalse($responseData['success'], 'Raw response is ' . $rawResponse);
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
 
-        $this->assertContains('not found', mb_strtolower($rawResponse));
-        $this->assertContains('username', mb_strtolower($rawResponse));
+        $this->assertContains('not found', mb_strtolower($responseData['error_message']));
+        $this->assertContains('username', mb_strtolower($responseData['error_message']));
     }
 
     public function setUp()

@@ -10,20 +10,18 @@ use Symfony\Component\HttpFoundation\Request;
 class LoginController
 {
     private $usersService;
-    private $app;
 
-    public function __construct(UsersService $service, \Silex\Application $app)
+    public function __construct(UsersService $service)
     {
         $this->usersService = $service;
-        $this->app = $app;
     }
 
     public function login(Request $request)
     {
         $response = [];
 
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
+        $username = trim($request->request->get('username'));
+        $password = trim($request->request->get('password'));
         $user = $this->usersService->getByUsername($username);
 
         if (!isset($user['id'])) {
@@ -37,18 +35,8 @@ class LoginController
         } else {
             //all correct
             $response['success'] = true;
-            $response['token'] = $this->getNewToken($user['id']);
+            $response['token'] = $this->usersService->generateUniqueToken($user['id']);
         }
         return new JsonResponse($response);
-    }
-
-    private function getNewToken($userId)
-    {
-        do {
-            $token = password_hash(random_bytes(1024), PASSWORD_DEFAULT);
-        } while ($this->usersService->isTokenExists($token));
-        $user['token'] = $token;
-        $this->usersService->update($userId, ['token' => $token]);
-        return $token;
     }
 }

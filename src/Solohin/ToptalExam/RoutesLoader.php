@@ -17,7 +17,10 @@ class RoutesLoader
     private function instantiateControllers()
     {
         $this->app['login.controller'] = function () {
-            return new Controllers\LoginController($this->app['users.service'], $this->app);
+            return new Controllers\LoginController($this->app['users.service']);
+        };
+        $this->app['registration.controller'] = function () {
+            return new Controllers\RegistrationController($this->app['users.service']);
         };
     }
 
@@ -33,6 +36,7 @@ class RoutesLoader
     private function bindLogin(\Silex\ControllerCollection &$api)
     {
         $api->post('/login', "login.controller:login");
+        $api->post('/register', "registration.controller:register");
     }
 }
 
