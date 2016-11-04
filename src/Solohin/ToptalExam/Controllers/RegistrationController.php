@@ -29,7 +29,6 @@ class RegistrationController
         $username = trim($request->request->get('username'));
         $password = trim($request->request->get('password'));
 
-        $checkFailed = false;
         if (strlen($username) < self::MIN_USERNAME) {
             $response['error_message'] = 'Username too short. It have to be at least ' . self::MIN_USERNAME . ' symbols';
         } elseif (strlen($username) > self::MAX_USERNAME) {
