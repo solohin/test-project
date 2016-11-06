@@ -30,3 +30,8 @@ Register new user.
 
 ### Methods
 
+#### Auth with header
+You must provide token form /v1/login or /v1/register in X-AUTH-TOKEN header or in token post/get parameter
+
+
+
