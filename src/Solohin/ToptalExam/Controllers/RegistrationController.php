@@ -2,6 +2,7 @@
 
 namespace Solohin\ToptalExam\Controllers;
 
+use Solohin\ToptalExam\ErrorTypes;
 use Solohin\ToptalExam\Security\UserRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Solohin\ToptalExam\Services\UsersService;
@@ -31,14 +32,19 @@ class RegistrationController
 
         if (strlen($username) < self::MIN_USERNAME) {
             $response['error_message'] = 'Username too short. It have to be at least ' . self::MIN_USERNAME . ' symbols';
+            $response['error_type'] = ErrorTypes::SHORT_USERNAME;
         } elseif (strlen($username) > self::MAX_USERNAME) {
             $response['error_message'] = 'Username too long. It have to be ' . self::MAX_USERNAME . ' symbols max';
+            $response['error_type'] = ErrorTypes::LONG_USERNAME;
         } elseif (strlen($password) < self::MIN_PASSWORD) {
             $response['error_message'] = 'Password too short. It have to be at least ' . self::MIN_PASSWORD . ' symbols';
+            $response['error_type'] = ErrorTypes::SHORT_PASSWORD;
         } elseif (strlen($password) > self::MAX_PASSWORD) {
             $response['error_message'] = 'Password too long. It have to be ' . self::MAX_PASSWORD . ' symbols max';
+            $response['error_type'] = ErrorTypes::LONG_PASSWORD;
         } elseif ($this->usersService->getByUsername($username) !== false) {
             $response['error_message'] = 'User with the same username exists. Please choose other name or log in.';
+            $response['error_type'] = ErrorTypes::USERNAME_EXISTS;
         }
 
         if (isset($response['error_message'])) {

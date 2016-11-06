@@ -6,6 +6,7 @@ use Silex\Provider\MonologServiceProvider;
 use Silex\Provider\ServiceControllerServiceProvider;
 use Solohin\ToptalExam\Database\SchemaCreator;
 use Solohin\ToptalExam\Database\SchemaManager;
+use Solohin\ToptalExam\ErrorTypes;
 use Solohin\ToptalExam\Security\TokenAuthenticator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +14,7 @@ use Solohin\ToptalExam\ServicesLoader;
 use Solohin\ToptalExam\RoutesLoader;
 use Carbon\Carbon;
 use Silex\Provider\VarDumperServiceProvider;
-use Solohin\ToptalExam\Security\SecurityLoader;
+use Solohin\ToptalExam\SecurityLoader;
 
 /** @var $app Silex\Application run */
 
@@ -42,7 +43,7 @@ $app['app.token_authenticator'] = function ($app) {
     return new TokenAuthenticator($app['security.encoder_factory']);
 };
 
-$app['schema_manager'] = function($app){
+$app['schema_manager'] = function ($app) {
     return new SchemaManager($app['db']);
 };
 
@@ -66,11 +67,14 @@ $routesLoader->bindRoutesToControllers();
 $securityLoader = new SecurityLoader($app);
 $securityLoader->initTokenSecurity();
 
-//TODO DEBUG START
-//$app->get("/{something}", function () {
-//    return new JsonResponse(['debug'=>'I am here!']);
-//})->assert('something', '.*');
-//TODO DEBUG ENDS
+//Fallback
+$app->match("/{anything}", function () {
+    return new JsonResponse([
+        'success' => false,
+        'error_message' => 'Method not found',
+        'error_type' => ErrorTypes::METHOD_NOT_FOUND
+    ]);
+})->assert('anything', '.*');
 
 //Handle Exceptions
 $app->error(function (Exception $e, $code) use ($app) {

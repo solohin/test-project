@@ -6,7 +6,9 @@ class UsersService extends BaseService
 {
     public function getOne($id)
     {
-        return $this->db->fetchAssoc("SELECT id, username, password_hash as password, token FROM users WHERE id=?", [(int)$id]);
+        return $this->postFormatUser(
+            $this->db->fetchAssoc("SELECT id, username, password_hash as password, token, roles FROM users WHERE id=?", [(int)$id])
+        );
     }
 
     public function isTokenExists($token)
@@ -21,7 +23,19 @@ class UsersService extends BaseService
      */
     public function getByUsername($username)
     {
-        return $this->db->fetchAssoc("SELECT id, username, password_hash as password, token FROM users WHERE username=?", [$username]);
+        return $this->postFormatUser(
+            $this->db->fetchAssoc("SELECT id, username, password_hash as password, token, roles FROM users WHERE username=?", [$username])
+        );
+    }
+
+    private function postFormatUser($user)
+    {
+        if (!$user) {
+            return $user;
+        } else {
+            $user['roles'] = explode(',', $user['roles']);
+            return $user;
+        }
     }
 
     public function insert($user)
@@ -34,6 +48,13 @@ class UsersService extends BaseService
         $user = $this->prepareToSave($user);
         $this->db->insert("users", $user);
         return $this->db->lastInsertId();
+    }
+
+    public function getUserByToken($token)
+    {
+        $result = $this->db->fetchAssoc("SELECT id, username, password_hash as password, token, roles FROM users WHERE token=?", [$token]);
+        $result['roles'] = explode(',', $result['roles']);
+        return $result;
     }
 
     public function generateUniqueToken($userId = null)

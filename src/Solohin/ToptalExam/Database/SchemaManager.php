@@ -33,7 +33,7 @@ class SchemaManager
         $schema = $this->conn->getSchemaManager();
         $tableName = 'users';
 
-        if($flush && $schema->tablesExist($tableName)){
+        if ($flush && $schema->tablesExist($tableName)) {
             $this->drop($tableName);
         }
 

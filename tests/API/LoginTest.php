@@ -56,6 +56,7 @@ class LoginTest extends WebTestCase
         $this->assertArrayHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertNotEmpty($responseData['token']);
         $this->assertNotEquals(self::DUMMY_USER['token'], $responseData['token']);
+
     }
 
     public function testIncorrectPassword()
@@ -78,8 +79,8 @@ class LoginTest extends WebTestCase
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
 
-        $this->assertContains('incorrect', mb_strtolower($responseData['error_message']));
-        $this->assertContains('password', mb_strtolower($responseData['error_message']));
+        $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals('wrong_password', $responseData['error_type'], 'error_type is ' . $responseData['error_message']);
     }
 
     public function testIncorrectLogin()
@@ -101,8 +102,8 @@ class LoginTest extends WebTestCase
         $this->assertFalse($responseData['success'], 'Raw response is ' . $rawResponse);
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
 
-        $this->assertContains('not found', mb_strtolower($responseData['error_message']));
-        $this->assertContains('username', mb_strtolower($responseData['error_message']));
+        $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals('wrong_username', $responseData['error_type'], 'error_type is ' . $responseData['error_message']);
     }
 
     public function setUp()

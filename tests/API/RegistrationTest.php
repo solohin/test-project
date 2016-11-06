@@ -40,7 +40,7 @@ class RegistrationTest extends WebTestCase
         $otherPassword = str_repeat('1', self::MIN_PASSWORD);
 
         $this->registerHaveToBeSuccesful($userName, $password);
-        $this->registerHaveToThrowError($userName, $otherPassword, ['username', 'exists']);
+        $this->registerHaveToThrowError($userName, $otherPassword, 'username_exists');
     }
 
     public function testWhitespaces()
@@ -48,7 +48,7 @@ class RegistrationTest extends WebTestCase
         $userName = '     ';
         $password = str_repeat('_', self::MIN_PASSWORD);
 
-        $this->registerHaveToThrowError($userName, $password, ['username', self::MIN_USERNAME]);
+        $this->registerHaveToThrowError($userName, $password, 'short_username');
     }
 
     public function testShortCredentials()
@@ -56,17 +56,17 @@ class RegistrationTest extends WebTestCase
         $this->registerHaveToThrowError(
             str_repeat('_', self::MIN_USERNAME - 1),
             str_repeat('_', self::MIN_PASSWORD),
-            ['username', self::MIN_USERNAME]
+            'short_username'
         );
         $this->registerHaveToThrowError(
             str_repeat('_', self::MIN_USERNAME),
             str_repeat('_', self::MIN_PASSWORD - 1),
-            ['password', self::MIN_PASSWORD]
+            'short_password'
         );
         $this->registerHaveToThrowError(
             str_repeat('_', self::MIN_USERNAME - 1),
             str_repeat('_', self::MIN_PASSWORD - 1),
-            ['username', self::MIN_USERNAME]
+            'short_username'
         );
     }
 
@@ -75,7 +75,7 @@ class RegistrationTest extends WebTestCase
         $this->registerHaveToThrowError(
             '',
             '',
-            ['username', self::MIN_USERNAME]
+            'short_username'
         );
     }
 
@@ -84,21 +84,21 @@ class RegistrationTest extends WebTestCase
         $this->registerHaveToThrowError(
             str_repeat('_', self::MAX_USERNAME + 1),
             str_repeat('_', self::MAX_PASSWORD),
-            ['username', self::MAX_USERNAME]
+            'long_username'
         );
         $this->registerHaveToThrowError(
             str_repeat('_', self::MAX_USERNAME),
             str_repeat('_', self::MAX_PASSWORD + 1),
-            ['password', self::MIN_PASSWORD]
+            'long_password'
         );
         $this->registerHaveToThrowError(
             str_repeat('_', self::MAX_USERNAME + 1),
             str_repeat('_', self::MAX_PASSWORD + 1),
-            ['username', self::MAX_USERNAME]
+            'long_username'
         );
     }
 
-    private function registerHaveToThrowError($username, $password, array $errorWords = [])
+    private function registerHaveToThrowError($username, $password, $errorType)
     {
         $client = $this->createClient();
 
@@ -115,9 +115,8 @@ class RegistrationTest extends WebTestCase
         $this->assertArrayNotHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertFalse($responseData['success'], 'Raw response is ' . $rawResponse);
 
-        foreach ($errorWords as $word) {
-            $this->assertContains(mb_strtolower($word), mb_strtolower($responseData['error_message']));
-        }
+        $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals($errorType, $responseData['error_type'], 'error_type is ' . $responseData['error_type']);
     }
 
     private function registerHaveToBeSuccesful($username, $password)
