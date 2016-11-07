@@ -13,7 +13,7 @@ Write an application for the input of calories
 - REST API. Make it possible to perform all user actions via the API, including authentication (If a mobile application and you don’t know how to create your own backend you can use Firebase.com or similar services to create the API).
 - In any case you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc for this purpose.
 - Bonus: unit and e2e tests!
-You will not be marked on graphic design, however, do try to keep it as tidy as possible.
+- You will not be marked on graphic design, however, do try to keep it as tidy as possible.
 
 NOTE: Please keep in mind that this is the project that will be used to evaluate your skills. The project will be evaluated as if you were delivering it to a customer. We expect you to make sure that the app is fully functional and doesn’t have any obvious missing pieces. The deadline for the project is 2 weeks from today.
 
@@ -112,6 +112,7 @@ Get filtered notes list.
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 **Request**
+
 - from_date - Optional filter note[date]. The format is "dd.mm.yyyy", for example "31.12.2016".
 - to_date - Optional filter note[date]. The same format.
 - from_time - Optional filter note[time]. The format is "hh:mm", for example "23:57". Midnight is 00:00. 
