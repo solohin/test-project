@@ -30,15 +30,19 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getCredentials(Request $request)
     {
-        if (!$token = $request->headers->get('X-AUTH-TOKEN')) {
-            // no token? Return null and no other methods will be called
-            return;
+        $token = $request->headers->get('X-AUTH-TOKEN');
+
+        if (!$token) {
+            $token = $request->query->get('token');
         }
 
-        // What you return here will be passed to getUser() as $credentials
-        return array(
+        if (!$token) {
+            return null;
+        }
+
+        return [
             'token' => $token,
-        );
+        ];
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -85,7 +89,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     {
         $data = array(
             // you might translate this message
-            'message' => 'Authentication Required'
+            'message' => 'Authentication Required',
+            'error_type' => ErrorTypes::NO_TOKEN,
+            'success' => false,
         );
 
         return new JsonResponse($data, 401);

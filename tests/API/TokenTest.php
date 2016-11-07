@@ -24,7 +24,7 @@ class TokenTest extends WebTestCase
         $responseData = json_decode($rawResponse, 1);
 
         $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
-        $this->assertEquals('method_not_found', $responseData['error_type'], 'error_type is ' . $responseData['error_message']);
+        $this->assertEquals('method_not_found', $responseData['error_type'], 'error_message is ' . $responseData['error_message']);
         $this->assertEquals(false, $responseData['success']);
     }
 
@@ -37,7 +37,33 @@ class TokenTest extends WebTestCase
         $responseData = json_decode($rawResponse, 1);
 
         $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
-        $this->assertEquals('wrong_token', $responseData['error_type'], 'error_type is ' . $responseData['error_message']);
+        $this->assertEquals('wrong_token', $responseData['error_type'], 'error_message is ' . $responseData['error_message']);
+        $this->assertEquals(false, $responseData['success']);
+    }
+
+    public function testEmptyToken()
+    {
+        $client = $this->createClient();
+        $client->request('POST', '/v1/dummy_method');
+
+        $rawResponse = $client->getResponse()->getContent();
+        $responseData = json_decode($rawResponse, 1);
+
+        $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals('no_token', $responseData['error_type'], 'Raw response is ' . $rawResponse);
+        $this->assertEquals(false, $responseData['success']);
+    }
+
+    public function testQueryParamToken()
+    {
+        $client = $this->createClient();
+        $client->request('POST', '/v1/dummy_method?token=' . $this->testToken);
+
+        $rawResponse = $client->getResponse()->getContent();
+        $responseData = json_decode($rawResponse, 1);
+
+        $this->assertArrayHasKey('error_type', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals('method_not_found', $responseData['error_type'], 'error_message is ' . $responseData['error_message']);
         $this->assertEquals(false, $responseData['success']);
     }
 

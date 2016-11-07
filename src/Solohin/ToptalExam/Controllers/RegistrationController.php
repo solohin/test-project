@@ -7,6 +7,7 @@ use Solohin\ToptalExam\Security\UserRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Solohin\ToptalExam\Services\UsersService;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
 class RegistrationController
@@ -23,7 +24,7 @@ class RegistrationController
         $this->usersService = $service;
     }
 
-    public function register(Request $request)
+    public function register(Request $request, \Silex\Application $app)
     {
         $response = ['success' => true];
 
@@ -51,8 +52,7 @@ class RegistrationController
             $response['success'] = false;
             return new JsonResponse($response);
         }
-
-
+        
         $user = [
             'username' => $username,
             'password' => $password,
@@ -63,6 +63,14 @@ class RegistrationController
         $userFromDB = $this->usersService->getOne($id);
         $response['token'] = $userFromDB['token'];
 
-        return new JsonResponse($response);
+        //Make login subrequest
+        $subRequest = Request::create('/' . $app["api.version"] . '/login', 'POST', [
+            'username' => $username,
+            'password' => $password,
+        ], $request->cookies->all(), array(), $request->server->all());
+
+
+        $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+        return $response;
     }
 }

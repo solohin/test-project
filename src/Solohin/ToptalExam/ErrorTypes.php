@@ -22,4 +22,5 @@ class ErrorTypes
 
     const METHOD_NOT_FOUND = 'method_not_found';
     const WRONG_TOKEN = 'wrong_token';
+    const NO_TOKEN = 'no_token';
 }
