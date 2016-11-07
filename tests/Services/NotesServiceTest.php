@@ -18,12 +18,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $app = new Application();
-        $app->register(new DoctrineServiceProvider(), array(
-            "db.options" => array(
-                "driver" => "pdo_sqlite",
-                "memory" => true
-            ),
-        ));
+        $app->register(new DoctrineServiceProvider(), \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams());
 
         $schemaManager = new SchemaManager($app['db']);
         $schemaManager->flushDatabase();
@@ -146,11 +141,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $notes = $this->notesService->getAll();
         $this->assertCount(6, $notes);
         $this->assertEquals(3100, array_sum(array_column($notes, 'calories')));
-    }
-
-    public function testGetAllDailyNormal()
-    {
-        //TODO waiting fot Juan answer
     }
 
     public function testGetAllWithUserID()
