@@ -110,7 +110,6 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
     - time - Time of note in format "hh:mm", for example "23:57"
     - date - Date of note in format "dd.mm.yyyy", for example "31.12.2016"
 
-
 ### Constants
 
 #### Roles

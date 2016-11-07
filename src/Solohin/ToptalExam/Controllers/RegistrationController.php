@@ -52,7 +52,7 @@ class RegistrationController
             $response['success'] = false;
             return new JsonResponse($response);
         }
-        
+
         $user = [
             'username' => $username,
             'password' => $password,
@@ -68,9 +68,6 @@ class RegistrationController
             'username' => $username,
             'password' => $password,
         ], $request->cookies->all(), array(), $request->server->all());
-
-
-        $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
-        return $response;
+        return $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
     }
 }

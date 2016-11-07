@@ -3,6 +3,7 @@
 namespace Solohin\ToptalExam;
 
 use Silex\Application;
+use Silex\ControllerCollection;
 
 class RoutesLoader
 {
@@ -22,6 +23,9 @@ class RoutesLoader
         $this->app['registration.controller'] = function () {
             return new Controllers\RegistrationController($this->app['users.service']);
         };
+        $this->app['notes.controller'] = function () {
+            return new Controllers\RegistrationController($this->app['notes.service']);
+        };
     }
 
     public function bindRoutesToControllers()
@@ -29,14 +33,29 @@ class RoutesLoader
         $api = $this->app["controllers_factory"];
 
         $this->bindLogin($api);
+        $this->bindRegister($api);
+        $this->bindNotes($api);
 
         $this->app->mount('/' . $this->app["api.version"], $api);
     }
 
-    private function bindLogin(\Silex\ControllerCollection &$api)
+    private function bindLogin(ControllerCollection &$api)
     {
         $api->post('/login', "login.controller:login");
+    }
+
+    private function bindRegister(ControllerCollection &$api)
+    {
         $api->post('/register', "registration.controller:register");
+    }
+
+    private function bindNotes(ControllerCollection &$api)
+    {
+        $api->post('/notes/', "notes.controller:add");
+        $api->put('/notes/{id}', "notes.controller:update");
+        $api->get('/notes/{id}', "notes.controller:getOne");
+        $api->get('/notes/', "notes.controller:getList");
+        $api->delete('/notes/{id}', "notes.controller:remove");
     }
 }
 
