@@ -117,6 +117,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - to_date - Optional filter note[date]. The same format.
 - from_time - Optional filter note[time]. The format is "hh:mm", for example "23:57". Midnight is 00:00. 
 - to_time - Optional filter note[time]. The same format. Midnight is 23:59. 
+- page - Optional page number starting from 1. Default = 1. 500 items per page
 
 **Response**
 
