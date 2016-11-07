@@ -11,6 +11,7 @@ use Solohin\ToptalExam\Services\UsersService;
 
 class NotesServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const ON_PAGE = 500;
     /** @var $notesService NotesService */
     private $notesService;
 
@@ -35,7 +36,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
          * 100 - 1 - 12:00 - 01.01.2017
          * 200 - 2 - 14:00 - 02.01.2017
          * 300 - 1 - 17:40 - 01.01.2017
-         * 400 - 1 - 16:25 - 02.01.2017
+         * 400 - 1 - 16:05 - 02.01.2017
          * 900 - 1 - 23:59 - 01.01.2017
          * 1200 - 1 - 00:00 - 03.01.2017
          */
@@ -68,7 +69,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
             'text' => 'Fourth note',
             'calories' => 400,
             'user_id' => 1,
-            'time' => '16:25',
+            'time' => '16:05',
             'date' => '02.01.2017',
         ]);
         $this->notesService->insert([
@@ -91,12 +92,9 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
     private function assertArrayIsPartOfArray($expected, $actual)
     {
-        if (!is_array($actual)) {
-            $this->assertTrue(false, 'Actual is not an array ' . print_r($actual, 1));
-        }
-        if (!is_array($expected)) {
-            $this->assertTrue(false, 'Actual is not an array ' . print_r($expected, 1));
-        }
+        $this->assertTrue(is_array($actual), 'Actual is not an array ' . print_r($actual, 1));
+        $this->assertTrue(is_array($expected), 'Expected is not an array ' . print_r($expected, 1));
+
         foreach ($expected as $key => $value) {
             $this->assertArrayHasKey($key, $actual, 'No key ' . $key . ', keys: ' . implode(', ', array_keys($actual)));
             $this->assertEquals($value, $actual[$key], 'Wrong key' . $key . ' value');
@@ -171,7 +169,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
      * 100  1       12:00   01.01.2017
      * 200  2       14:00   02.01.2017
      * 300  1       17:40   01.01.2017
-     * 400  1       16:25   02.01.2017
+     * 400  1       16:05   02.01.2017
      * 900  1       23:59   01.01.2017
      * 1200 1       00:00   03.01.2017
      */
@@ -180,7 +178,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     {
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             '02.01.2017',
             $toDate = null,
             $fromTime = null,
@@ -190,7 +187,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             $fromDate = null,
             '02.01.2017',
             $fromTime = null,
@@ -200,35 +196,21 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             '02.01.2017',
             '02.01.2017',
             $fromTime = null,
             $toTime = null
         );
-        $this->assertEquals(400, array_sum(array_column($notes, 'calories')));
+        $this->assertEquals(600, array_sum(array_column($notes, 'calories')));
     }
 
-    public function testGetAllWithWrongDates1()
+    /**
+     * @expectedException \Exception
+     */
+    public function testGetAllWithWrongDates()
     {
-        $this->expectException('Expect to get db error');
-
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
-            '32.01.2017',
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null
-        );
-    }
-
-    public function testGetAllWithWrongDates2()
-    {
-        $this->expectException('Expect to get db error');
-        $notes = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = 1,
             '31/12/2017',
             $toDate = null,
             $fromTime = null,
@@ -240,7 +222,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     {
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             $fromDate = null,
             $toDate = null,
             $fromTime = '17:40',
@@ -250,9 +231,8 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             $fromDate = null,
-            $toDate = null, $toDate = null,
+            $toDate = null,
             $fromTime = null,
             $toTime = '17:40'
         );
@@ -260,7 +240,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             $fromDate = null,
             $toDate = null,
             $fromTime = '14:00',
@@ -269,12 +248,13 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(900, array_sum(array_column($notes, 'calories')));
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testGetAllWithWrongTime1()
     {
-        $this->expectException('Expect to get db error');
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
-            $page = 1,
             $fromDate = null,
             $toDate = null,
             '',
@@ -282,9 +262,11 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testGetAllWithWrongTime2()
     {
-        $this->expectException('Expect to get db error');
         $notes = $this->notesService->getAll(
             $userIdFilter = null,
             $page = 1,
@@ -298,8 +280,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetAllFullFiltered()
     {
         $notes = $this->notesService->getAll(
-            $userIdFilter = 2,
-            $page = 1,
+            $userIdFilter = 1,
             $fromDate = '02.01.2017',
             $toDate = '03.01.2017',
             $fromTime = '14:00',
@@ -311,7 +292,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     public function testGetAllPaging()
     {
         $startCount = count($this->notesService->getAll());
-        for ($i = 0; $i < 500; $i++) {
+        for ($i = 0; $i < self::ON_PAGE; $i++) {
             $this->notesService->insert([
                 'text' => 'Note #' . $i,
                 'calories' => 100,
@@ -320,59 +301,24 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
                 'date' => '01.01.2017',
             ]);
         }
-        $firstPage = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = null,
-            $fromDate = null,
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null
-        );
-        $secondPage = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = null,
-            $fromDate = null,
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null,
-            $page = 2
-        );
-        $thirdPage = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = null,
-            $fromDate = null,
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null,
-            $page = 3
-        );
-        $zeroPage = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = null,
-            $fromDate = null,
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null,
-            $page = 0
-        );
-        $minusOnePage = $this->notesService->getAll(
-            $userIdFilter = null,
-            $page = null,
-            $fromDate = null,
-            $toDate = null,
-            $fromTime = null,
-            $toTime = null,
-            $page = 0
-        );
+        $firstPage = $this->notesService->getAll();
+
+        $this->assertCount(self::ON_PAGE, $firstPage);
+
+        $secondPage = $this->notesService->getAll(null, null, null, null, null, $page = 2);
 
         //Real pages
-        $this->assertCount(500, $firstPage);
         $this->assertCount($startCount, $secondPage);
+
+        $thirdPage = $this->notesService->getAll(null, null, null, null, null, $page = 3);
 
         //Fake page
         $this->assertCount(0, $thirdPage);
 
-        //And wrong pages
+        $zeroPage = $this->notesService->getAll(null, null, null, null, null, $page = 0);
+        $minusOnePage = $this->notesService->getAll(null, null, null, null, null, $page = -1);
+
+        //And wrong pages is first page
         $this->assertEquals($firstPage, $zeroPage);
         $this->assertEquals($firstPage, $minusOnePage);
     }
@@ -395,9 +341,32 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertCount($startCount + 1, $allNotes);
     }
 
+    public function testInsertLongText()
+    {
+        $startCount = count($this->notesService->getAll());
+
+        $longText = str_repeat('hello привет Ֆիններեն', 10000);
+
+        $id = $this->notesService->insert([
+            'text' => $longText,
+            'calories' => 100,
+            'user_id' => 1,
+            'time' => '23:59',
+            'date' => '01.01.2017',
+        ]);
+
+        //Very long text is not accepted
+        $this->assertNotEquals('Note #zero', $this->notesService->getOne($id)['text']);
+
+        $allNotes = $this->notesService->getAll();
+        $this->assertCount($startCount + 1, $allNotes);
+    }
+
+    /**
+     * @expectedException \Exception
+     */
     public function testInsertWrongTime()
     {
-        $this->expectException('Expect to get db error');
         $this->notesService->insert([
             'text' => 'Note #zero',
             'calories' => 100,
@@ -407,15 +376,17 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testInsertWrongDate()
     {
-        $this->expectException('Expect to get db error');
         $this->notesService->insert([
             'text' => 'Note #zero',
             'calories' => 100,
             'user_id' => 1,
             'time' => '23:59',
-            'date' => '32.01.2017',
+            'date' => '32-01-2017',
         ]);
     }
 
@@ -475,7 +446,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     {
         $id = 4;
         $note = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$note);
+        $this->assertArrayHasKey('id', $note);
 
         //then delete
         $success = $this->notesService->delete($id);
@@ -491,7 +462,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $userid = 1;
 
         $note = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$note);
+        $this->assertArrayHasKey('id', $note);
         $deleted = $this->notesService->delete($id);
         $newNote = $this->notesService->getOne($id);
         $this->assertFalse($newNote);
@@ -502,10 +473,10 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $userid = 1;
 
         $note = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$note);
-        $deleted = $this->notesService->delete($id,$userid);
+        $this->assertArrayHasKey('id', $note);
+        $deleted = $this->notesService->delete($id, $userid);
         $newNote = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$newNote);
+        $this->assertArrayHasKey('id', $newNote);
         $this->assertFalse($deleted);
     }
 
@@ -513,11 +484,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     {
         $id = 999;
 
-        $note = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$note);
         $deleted = $this->notesService->delete($id);
-        $newNote = $this->notesService->getOne($id);
-        $this->assertArrayHasKey('id',$newNote);
         $this->assertFalse($deleted);
     }
 }

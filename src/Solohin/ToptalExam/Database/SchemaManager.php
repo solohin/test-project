@@ -26,6 +26,7 @@ class SchemaManager
     public function createTables($flush = false)
     {
         $this->createUserTable($flush);
+        $this->createNotesTable($flush);
     }
 
     private function createUserTable($flush = false)
@@ -36,16 +37,41 @@ class SchemaManager
         if ($flush && $schema->tablesExist($tableName)) {
             $this->drop($tableName);
         }
+        //TODO add indexes
 
         if (!$schema->tablesExist($tableName)) {
             $users = new Table($tableName);
-            $users->addColumn('id', 'integer', array('unsigned' => true, 'autoincrement' => true));
-            $users->setPrimaryKey(array('id'));
-            $users->addColumn('username', 'string', array('length' => 32));
-            $users->addUniqueIndex(array('username'));
-            $users->addColumn('password_hash', 'string', array('length' => 255));
-            $users->addColumn('roles', 'string', array('length' => 255));
-            $users->addColumn('token', 'string', array('length' => 255));
+            $users->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+            $users->setPrimaryKey(['id']);
+            $users->addColumn('username', 'string', ['length' => 32]);
+            $users->addUniqueIndex(['username']);
+            $users->addColumn('password_hash', 'string', ['length' => 255]);
+            $users->addColumn('roles', 'string', ['length' => 255]);
+            $users->addColumn('token', 'string', ['length' => 255]);
+
+            $schema->createTable($users);
+        }
+    }
+
+    private function createNotesTable($flush = false)
+    {
+        $schema = $this->conn->getSchemaManager();
+        $tableName = 'notes';
+
+        if ($flush && $schema->tablesExist($tableName)) {
+            $this->drop($tableName);
+        }
+        //TODO add indexes
+
+        if (!$schema->tablesExist($tableName)) {
+            $users = new Table($tableName);
+            $users->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);
+            $users->setPrimaryKey(['id']);
+            $users->addColumn('user_id', 'string', ['length' => 255]);
+            $users->addColumn('calories', 'integer', ['unsigned' => true]);
+            $users->addColumn('time', 'integer', ['unsigned' => true]);//count of seconds from 00:00
+            $users->addColumn('date', 'integer', ['unsigned' => true]);//timestamp
+            $users->addColumn('text', 'text');
 
             $schema->createTable($users);
         }
