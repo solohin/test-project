@@ -89,7 +89,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - note[date] - Date of note in format "dd.mm.yyyy", for example "31.12.2016"
 
 #### GET /notes/
-Get note by ID. 
+Get filtered notes list. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 **Request**
