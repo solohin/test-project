@@ -9,7 +9,7 @@ class NotesService extends BaseService
 
     }
 
-    public function getAll($userIdFilter = null, $page = 1, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null)
+    public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1, $limit = 500)
     {
 
     }
