@@ -2,6 +2,8 @@
 
 namespace Solohin\ToptalExam\Services;
 
+use Solohin\ToptalExam\Security\UserRoles;
+
 class UsersService extends BaseService
 {
     public function getOne($id)
@@ -83,13 +85,19 @@ class UsersService extends BaseService
 
     private function prepareToSave($user, $insert = false)
     {
+        //Only first role
         if (isset($user['roles']) && is_array($user['roles'])) {
-            $user['roles'] = implode(',', $user['roles']);
+            $user['roles'] = isset($user['roles'][0]) ? $user['roles'][0] : UserRoles::DEFAULT_ROLE;
         }
-        if($insert){
-            if(!isset($user['roles'])){
-                $user['roles'] = '';
+
+        //On insert
+        if ($insert) {
+            //no role = default role
+            if (!isset($user['roles'])) {
+                $user['roles'] = UserRoles::DEFAULT_ROLE;
             }
+
+            //create token
             $user['token'] = $this->generateUniqueToken();
         }
 

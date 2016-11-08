@@ -9,8 +9,11 @@
 
 namespace Solohin\ToptalExam\Security;
 
-class UserRoles{
+class UserRoles
+{
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_MANAGER = 'ROLE_MANAGER';
     const ROLE_USER = 'ROLE_USER';
+
+    const DEFAULT_ROLE = self::ROLE_USER;
 }
