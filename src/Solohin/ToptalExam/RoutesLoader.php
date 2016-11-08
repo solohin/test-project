@@ -24,7 +24,7 @@ class RoutesLoader
             return new Controllers\RegistrationController($this->app['users.service']);
         };
         $this->app['notes.controller'] = function () {
-            return new Controllers\RegistrationController($this->app['notes.service']);
+            return new Controllers\NotesController($this->app['notes.service'], $this->app);
         };
     }
 
@@ -52,9 +52,11 @@ class RoutesLoader
     private function bindNotes(ControllerCollection &$api)
     {
         $api->post('/notes/', "notes.controller:add");
+        $api->post('/notes', "notes.controller:add");
         $api->put('/notes/{id}', "notes.controller:update");
         $api->get('/notes/{id}', "notes.controller:getOne");
         $api->get('/notes/', "notes.controller:getList");
+        $api->get('/notes', "notes.controller:getList");
         $api->delete('/notes/{id}', "notes.controller:remove");
     }
 }

@@ -10,22 +10,29 @@
 namespace Solohin\ToptalExam\Tests\Utils;
 
 
-class DataBase{
-    public static function getTestDBParams(){
-//        return [
-//            "db.options" => [
-//                "driver" => "pdo_sqlite",
-//                "memory" => true
-//            ],
-//        ];
-        return [
-            "db.options" => [
-                "driver" => "pdo_mysql",
-                "user" => "root",
-                "password" => "",
-                "dbname" => "test",
-                "host" => "127.0.0.1",
-            ],
-        ];
+class DataBase
+{
+    const DB_TYPE = 'sqlite';
+
+    public static function getTestDBParams()
+    {
+        if (self::DB_TYPE == 'sqlite') {
+            return [
+                "db.options" => [
+                    "driver" => "pdo_sqlite",
+                    "memory" => true
+                ],
+            ];
+        } else {
+            return [
+                "db.options" => [
+                    "driver" => "pdo_mysql",
+                    "user" => "root",
+                    "password" => "",
+                    "dbname" => "test",
+                    "host" => "127.0.0.1",
+                ],
+            ];
+        }
     }
 }

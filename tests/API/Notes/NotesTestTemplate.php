@@ -61,7 +61,8 @@ class NotesTestTemplate extends WebTestCase
         parent::tearDown();
     }
 
-    protected function caloriesSumm500Notes($role = 'admin'){
+    protected function caloriesSumm500Notes($role = 'admin')
+    {
         $notes = $this->get500Notes($role);
         return array_sum(array_column($notes, 'calories'));
     }
@@ -87,6 +88,11 @@ class NotesTestTemplate extends WebTestCase
         $responseData = json_decode($rawResponse, 1);
         $this->assertArrayHasKey('success', $responseData, $rawResponse);
         $this->assertEquals($waitForOk, $responseData['success'], $rawResponse);
+
+        if (!$waitForOk) {
+            $this->assertArrayHasKey('error_type', $responseData);
+            $this->assertArrayHasKey('error_message', $responseData);
+        }
 
         return $responseData;
     }

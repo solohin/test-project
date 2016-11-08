@@ -11,20 +11,6 @@ namespace Solohin\ToptalExam\Tests\API\Notes;
 
 class NotesAddTest extends NotesTestTemplate
 {
-    public function testAddByManager()
-    {
-        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'manager', [
-            'text' => 'Second note',
-            'calories' => 200,
-            'user_id' => 2,
-            'time' => '14:00',
-            'date' => '02.01.2017',
-        ], false);
-
-        $debug = 'Response is ' . print_r($responseData, 1);
-        $this->assertEquals('permissions_error', $responseData['error_type'], $debug);
-    }
-
     public function testAddByAdmin()
     {
         $startCalories = $this->caloriesSumm500Notes();
@@ -36,6 +22,20 @@ class NotesAddTest extends NotesTestTemplate
             'date' => '02.01.2017',
         ], true);
         $this->assertEquals($startCalories + 200, $this->caloriesSumm500Notes());
+    }
+
+    public function testAddByManager()
+    {
+        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'manager', [
+            'text' => 'Second note',
+            'calories' => 200,
+            'user_id' => 2,
+            'time' => '14:00',
+            'date' => '02.01.2017',
+        ], false);
+
+        $debug = 'Response is ' . print_r($responseData, 1);
+        $this->assertEquals('permission_denied', $responseData['error_type'], $debug);
     }
 
     public function testAddByAdminWithoutUser()
@@ -52,22 +52,33 @@ class NotesAddTest extends NotesTestTemplate
     public function testAddByUserOwner()
     {
         $startCalories = $this->caloriesSumm500Notes();
-        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'admin', [
+
+        //with user_id
+        $responseData1 = $this->makeJsonRequest('/v1/notes', 'POST', 'user', [
             'text' => 'Second note',
             'calories' => 400,
             'time' => '14:00',
             'date' => '02.01.2017',
             'user_id' => $this->dummyUsers['user']['token'],
         ], true);
-        $this->assertEquals($startCalories + 400, $this->caloriesSumm500Notes());
 
+        //without  user_id
+        $responseData2 = $this->makeJsonRequest('/v1/notes', 'POST', 'user', [
+            'text' => 'Second note',
+            'calories' => 500,
+            'time' => '14:00',
+            'date' => '02.01.2017',
+        ], true);
+
+        $this->assertEquals($startCalories + 900, $this->caloriesSumm500Notes());
+        $this->assertEquals($responseData2['id'], $responseData1['id'] + 1);
     }
 
     public function testAddByUserNotOwner()
     {
         $userCalories = $this->caloriesSumm500Notes('user');
 
-        $this->makeJsonRequest('/v1/notes', 'POST', 'admin', [
+        $this->makeJsonRequest('/v1/notes', 'POST', 'user', [
             'text' => 'Second note',
             'calories' => 400,
             'time' => '14:00',
@@ -81,29 +92,27 @@ class NotesAddTest extends NotesTestTemplate
 
     public function testAddWrongDate()
     {
-        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'manager', [
+        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'user', [
             'text' => 'Second note',
             'calories' => 200,
-            'user_id' => 2,
             'time' => '14:00',
             'date' => '02-01-2017',
         ], false);
 
         $debug = 'Response is ' . print_r($responseData, 1);
-        $this->assertEquals('wrong_date', $responseData['error_type'], $debug);
+        $this->assertEquals('wrong_date_format', $responseData['error_type'], $debug);
     }
 
     public function testAddWrongTime()
     {
-        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'manager', [
+        $responseData = $this->makeJsonRequest('/v1/notes', 'POST', 'user', [
             'text' => 'Second note',
             'calories' => 200,
-            'user_id' => 2,
             'time' => 'twenty four sixty one',
             'date' => '02.01.2017',
         ], false);
 
         $debug = 'Response is ' . print_r($responseData, 1);
-        $this->assertEquals('wrong_time', $responseData['error_type'], $debug);
+        $this->assertEquals('wrong_time_format', $responseData['error_type'], $debug);
     }
 }

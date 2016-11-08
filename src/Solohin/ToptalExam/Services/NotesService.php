@@ -3,9 +3,17 @@
 namespace Solohin\ToptalExam\Services;
 
 use PDO;
+use Solohin\ToptalExam\ErrorTypes;
 
 class NotesService extends BaseService
 {
+    private $lastErrorType = '';
+
+    public function getLastErrorType()
+    {
+        return $this->lastErrorType;
+    }
+
     public function getOne($id, $userIdFilter = null)
     {
         $sql = "SELECT id, text, calories, user_id, date, time FROM notes WHERE id=?";
@@ -113,7 +121,8 @@ class NotesService extends BaseService
         if ($date instanceof \DateTime) {
             return $date->getTimestamp();
         } else {
-            throw new \Exception($dateString . ' is incorrect date');
+            $this->lastErrorType = ErrorTypes::WRONG_DATE_FORMAT;
+            throw new \Exception($dateString . ' is incorrect date', 400);
         }
     }
 
@@ -149,14 +158,16 @@ class NotesService extends BaseService
         $tempTime = explode(':', $timeStr);
 
         if (count($tempTime) !== 2) {
-            throw new \Exception('Time have to be in 23:59 format. You pass ' . $timeStr);
+            $this->lastErrorType = ErrorTypes::WRONG_TIME_FORMAT;
+            throw new \Exception('Time have to be in 23:59 format. You pass ' . $timeStr, 400);
         }
 
         $hours = intval($tempTime[0]);
         $minutes = intval($tempTime[1]);
 
         if ($hours > 23 || $hours < 0 || $minutes > 59 || $minutes < 0) {
-            throw new \Exception('Time have to be in 23:59 format. You pass ' . $timeStr);
+            $this->lastErrorType = ErrorTypes::WRONG_TIME_FORMAT;
+            throw new \Exception('Time have to be in 23:59 format. You pass ' . $timeStr, 400);
         }
 
         return $hours * 60 * 60 + $minutes * 60;

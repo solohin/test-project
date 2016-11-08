@@ -11,6 +11,8 @@ namespace Solohin\ToptalExam;
 
 class ErrorTypes
 {
+    const INTERNAL_ERROR = 'internal_error';
+
     const WRONG_PASSWORD = 'wrong_password';
     const WRONG_USERNAME = 'wrong_username';
     const USERNAME_EXISTS = 'username_exists';
@@ -25,4 +27,9 @@ class ErrorTypes
     const NO_TOKEN = 'no_token';
 
     const NOTE_NOT_FOUND = 'note_not_found';
+
+    const PERMISSION_DENIED = 'permission_denied';
+    const EMPTY_USER_ID = 'empty_user_id';
+    const WRONG_DATE_FORMAT = 'wrong_date_format';
+    const WRONG_TIME_FORMAT = 'wrong_time_format';
 }

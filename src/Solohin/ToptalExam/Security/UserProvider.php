@@ -41,8 +41,8 @@ class UserProvider implements UserProviderInterface
         $fromDB = $this->usersService->getUserByToken($token);
 
         if (isset($fromDB['id'])) {
-            return new \Symfony\Component\Security\Core\User\User(
-                $fromDB['username'], $fromDB['password'], $fromDB['roles']
+            return new TokenUser(
+                $fromDB['id'], $fromDB['username'], $fromDB['roles']
             );
         } else {
             return null;
@@ -67,7 +67,7 @@ class UserProvider implements UserProviderInterface
     {
         $fromDB = $this->usersService->getByUsername($user->getUsername());
         if (isset($fromDB['id'])) {
-            return new \Symfony\Component\Security\Core\User\User(
+            return new TokenUser(
                 $fromDB['username'], $fromDB['password'], $fromDB['roles']
             );
         } else {
@@ -84,6 +84,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return 'Symfony\Component\Security\Core\User\User';
+        return 'Solohin\ToptalExam\Security\TokenUser';
     }
 }
