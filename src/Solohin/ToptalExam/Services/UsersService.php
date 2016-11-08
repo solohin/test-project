@@ -40,12 +40,7 @@ class UsersService extends BaseService
 
     public function insert($user)
     {
-        if (!isset($user['roles']) || is_null($user['roles'])) {
-            $user['roles'] = '';
-        }
-        $user['token'] = $this->generateUniqueToken();
-
-        $user = $this->prepareToSave($user);
+        $user = $this->prepareToSave($user, true);
         $this->db->insert("users", $user);
         return $this->db->lastInsertId();
     }
@@ -86,8 +81,19 @@ class UsersService extends BaseService
         return password_hash($password_hash, PASSWORD_DEFAULT);
     }
 
-    private function prepareToSave($user)
+    private function prepareToSave($user, $insert = false)
     {
+        if (isset($user['roles']) && is_array($user['roles'])) {
+            $user['roles'] = implode(',', $user['roles']);
+        }
+        if($insert){
+            if(!isset($user['roles'])){
+                $user['roles'] = '';
+            }
+            $user['token'] = $this->generateUniqueToken();
+        }
+
+
         if (isset($user['password'])) {
             $user['password_hash'] = self::hashPassword($user['password']);
             unset($user['password']);
