@@ -10,7 +10,10 @@
   "autoload": {
     "psr-0": {
       "Solohin": "src/"
-    }
+    },
+    "files": [
+      "tests/API/Notes/NotesTestTemplate.php", "tests/Utils/DataBase.php"
+    ]
   },
   "require-dev": {
     "phpunit/phpunit": "^5.0",
