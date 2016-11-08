@@ -32,7 +32,23 @@ class NotesService extends BaseService
     public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1)
     {
         $limit = 500;//Hardcoded
-        $sql = "SELECT id, text, calories, user_id, date, time FROM notes WHERE 1=1";
+        $sql = "
+            SELECT
+            notes.id, notes.text, notes.calories, notes.user_id, notes.date, notes.time,
+
+            IFNULL(users.daily_normal,0) >=
+            (
+                SELECT SUM(calories)
+                FROM notes as notes_inner
+                WHERE
+                    notes_inner.date=notes.date
+                    AND notes_inner.time <= notes.time
+                    AND notes_inner.user_id=notes.user_id
+            ) as daily_normal
+
+            FROM notes
+            LEFT JOIN users on users.id = notes.user_id
+            WHERE 1=1";
         $params = [];
 
         //filters
@@ -73,8 +89,6 @@ class NotesService extends BaseService
         $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 
         //sql
-        Debug::debug(array_column($params, 0));
-        Debug::debug($sql);
 
         $statement = $this->db->prepare($sql);
         foreach ($params as $index => $param) {
@@ -154,6 +168,10 @@ class NotesService extends BaseService
 
         $note['time'] = $this->secondsToTimeString($note['time']);
         $note['date'] = $this->timestampToDate($note['date']);
+        if (isset($note['daily_normal'])) {
+            $note['daily_normal'] = !!$note['daily_normal'];
+        }
+
         return $note;
     }
 

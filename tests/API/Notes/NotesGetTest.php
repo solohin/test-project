@@ -17,7 +17,20 @@ class NotesGetTest extends NotesTestTemplate
 {
     public function testGetAllAdmin()
     {
-        $this->assertEquals(3100, $this->caloriesSumm500Notes('admin'));
+        $this->assertEquals(3100, $this->caloriesSumm500Notes());
+    }
+
+    public function testDailyNormal()
+    {
+        $notes = $this->get500Notes();
+        $result = array_column($notes, 'daily_normal', 'id');
+
+        $this->assertEquals(true, $result[1]);
+        $this->assertEquals(false, $result[2]);
+        $this->assertEquals(true, $result[3]);
+        $this->assertEquals(true, $result[4]);
+        $this->assertEquals(false, $result[5]);
+        $this->assertEquals(false, $result[6]);
     }
 
     public function testGetAllUser()

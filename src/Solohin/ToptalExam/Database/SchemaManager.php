@@ -48,6 +48,7 @@ class SchemaManager
             $users->addColumn('password_hash', 'string', ['length' => 255]);
             $users->addColumn('roles', 'string', ['length' => 255]);
             $users->addColumn('token', 'string', ['length' => 255]);
+            $users->addColumn('daily_normal', 'integer', ['unsigned' => true, 'default' => 2000]);
 
             $schema->createTable($users);
         }

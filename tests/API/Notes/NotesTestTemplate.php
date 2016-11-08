@@ -24,21 +24,25 @@ class NotesTestTemplate extends WebTestCase
             'username' => 'dummyUser',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_USER'],
+            'daily_normal'=>400
         ],
         'admin' => [
             'username' => 'dummyAdmin',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_ADMIN'],
+            'daily_normal'=>400
         ],
         'manager' => [
             'username' => 'dummyManager',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_MANAGER'],
+            'daily_normal'=>400
         ],
         'user2' => [
             'username' => 'dummyUser2',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_USER'],
+            'daily_normal'=>400
         ]
     ];
 
