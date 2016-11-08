@@ -109,18 +109,39 @@ class NotesController
         ], $errorCode);
     }
 
-    public function remove($id)
-    {
-        throw new \Exception('Method not implemented yet');
-    }
-
     public function update($id, Request $request)
     {
         throw new \Exception('Method not implemented yet');
     }
 
-    public function delete($id)
+    public function remove($id)
     {
-        throw new \Exception('Method not implemented yet');
+        $role = $this->app['user']->getRoles()[0];
+
+        if ($role === UserRoles::ROLE_MANAGER) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Manager can not delete notes',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        } elseif ($role === UserRoles::ROLE_ADMIN) {
+            $userId = null;
+        } else {
+            $userId = $this->app['user']->getID();
+        }
+
+        try {
+            $deleted = $this->notesService->delete($id, $userId);
+            $response = ['success' => $deleted];
+            if ($deleted) {
+                return new JsonResponse($response);
+            } else {
+                $response['error_message'] = 'Note not found';
+                $response['error_type'] = ErrorTypes::NOTE_NOT_FOUND;
+                return new JsonResponse($response, 404);
+            }
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
     }
 }

@@ -16,26 +16,38 @@ class NotesDeleteTest extends NotesTestTemplate
 {
     public function testDeleteByUserOwner()
     {
-        //TODO implement
+        $startCalories = $this->caloriesSumm500Notes();
+
+        $this->makeJsonRequest('/v1/notes/1', 'DELETE', 'user', [], true);
+
+        $this->assertEquals($startCalories - 100, $this->caloriesSumm500Notes());
     }
 
     public function testDeleteByUserNotOwner()
     {
-        //TODO implement
+        $responseData = $this->makeJsonRequest('/v1/notes/2', 'DELETE', 'user', [], false);
+        $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
 
     public function testDeleteByManager()
     {
-        //TODO implement
+        $responseData = $this->makeJsonRequest('/v1/notes/1', 'DELETE', 'manager', [], false);
+        $this->assertEquals('permission_denied', $responseData['error_type'], print_r($responseData, 1));
     }
 
     public function testDeleteByAdmin()
     {
-        //TODO implement
+        $startCalories = $this->caloriesSumm500Notes();
+
+        $this->makeJsonRequest('/v1/notes/1', 'DELETE', 'admin', [], true);
+        $this->makeJsonRequest('/v1/notes/2', 'DELETE', 'admin', [], true);
+
+        $this->assertEquals($startCalories - 300, $this->caloriesSumm500Notes());
     }
 
     public function testDeleteNonexistent()
     {
-        //TODO implement
+        $responseData = $this->makeJsonRequest('/v1/notes/9999', 'DELETE', 'admin', [], false);
+        $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
 }

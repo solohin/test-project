@@ -99,6 +99,15 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - error_message - Error text for user (only if success === false)
 - error_type - error type constant (only if success === false)
 
+#### DELETE /notes/{id}
+Delete note by ID. 
+Works for ROLE_ADMIN or ROLE_USER(for owner)
+
+**Response**
+
+- success - Note has found or not
+- error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
 
 #### GET /notes/{id}
 Get note by ID. 

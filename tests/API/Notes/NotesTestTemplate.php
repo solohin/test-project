@@ -10,6 +10,7 @@
 namespace Solohin\ToptalExam\Tests\API\Notes;
 
 use Silex\WebTestCase;
+use Solohin\ToptalExam\Services\NotesService;
 use Solohin\ToptalExam\Services\UsersService;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -20,28 +21,86 @@ class NotesTestTemplate extends WebTestCase
             'username' => 'dummyUser',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_USER'],
-            'token' => 'old token',
         ],
         'admin' => [
             'username' => 'dummyAdmin',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_ADMIN'],
-            'token' => 'old token',
         ],
         'manager' => [
             'username' => 'dummyManager',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_MANAGER'],
-            'token' => 'old token',
+        ],
+        'user2' => [
+            'username' => 'dummyUser2',
+            'password' => 'Dummy Password 12345',
+            'roles' => ['ROLE_USER'],
         ]
     ];
 
+    /*
+     * 100 - 1 - 12:00 - 01.01.2017
+     * 200 - 2 - 14:00 - 02.01.2017
+     * 300 - 1 - 17:40 - 01.01.2017
+     * 400 - 1 - 16:05 - 02.01.2017
+     * 900 - 1 - 23:59 - 01.01.2017
+     * 1200 - 1 - 00:00 - 03.01.2017
+     */
 
-    public function setUp()
+    private function insertDummyNotes()
     {
-        parent::setUp();
+        $notesService = new NotesService($this->app['db']);
 
-        $this->app['schema_manager']->flushDatabase();
+        $notesService->insert([
+            'text' => 'First note',
+            'calories' => 100,
+            'user_id' => 1,
+            'time' => '12:00',
+            'date' => '01.01.2017',
+        ]);
+
+        $notesService->insert([
+            'text' => 'Second note',
+            'calories' => 200,
+            'user_id' => 4,
+            'time' => '14:00',
+            'date' => '02.01.2017',
+        ]);
+
+        $notesService->insert([
+            'text' => 'Third note',
+            'calories' => 300,
+            'user_id' => 1,
+            'time' => '17:40',
+            'date' => '01.01.2017',
+        ]);
+
+        $notesService->insert([
+            'text' => 'Fourth note',
+            'calories' => 400,
+            'user_id' => 1,
+            'time' => '16:05',
+            'date' => '02.01.2017',
+        ]);
+        $notesService->insert([
+            'text' => 'Fifth note',
+            'calories' => 900,
+            'user_id' => 1,
+            'time' => '23:59',
+            'date' => '01.01.2017',
+        ]);
+        $notesService->insert([
+            'text' => 'Sixth note',
+            'calories' => 1200,
+            'user_id' => 1,
+            'time' => '00:00',
+            'date' => '03.01.2017',
+        ]);
+    }
+
+    private function insertDummyUsers()
+    {
         $usersService = new UsersService($this->app['db']);
 
         //Create users
@@ -53,6 +112,17 @@ class NotesTestTemplate extends WebTestCase
 
         $id = $usersService->insert($this->dummyUsers['manager']);
         $this->dummyUsers['manager'] = $usersService->getOne($id);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->app['schema_manager']->flushDatabase();
+
+
+        $this->insertDummyNotes();
+        $this->insertDummyUsers();
     }
 
     public function tearDown()
