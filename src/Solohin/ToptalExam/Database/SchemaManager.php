@@ -79,6 +79,7 @@ class SchemaManager
 
     private function drop($tableName)
     {
-        $this->conn->query('DROP TABLE ' . $this->conn->quote($tableName, \PDO::PARAM_STR));
+        //We know that $tableName is safe from SQL injections
+        $this->conn->query('DROP TABLE ' . $tableName);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Solohin\ToptalExam\Services;
 
+use PDO;
+
 class NotesService extends BaseService
 {
     public function getOne($id, $userIdFilter = null)
@@ -28,23 +30,23 @@ class NotesService extends BaseService
 
         if ($userIdFilter !== null) {
             $sql .= ' AND user_id = ?';
-            $params[] = (int)$userIdFilter;
+            $params[] = [(int)$userIdFilter, PDO::PARAM_INT];
         }
         if ($fromDate !== null) {
             $sql .= ' AND date >= ?';
-            $params[] = $this->dateToTimestamp($fromDate);
+            $params[] = [$this->dateToTimestamp($fromDate), PDO::PARAM_INT];
         }
         if ($toDate !== null) {
             $sql .= ' AND date <= ?';
-            $params[] = $this->dateToTimestamp($toDate);
+            $params[] = [$this->dateToTimestamp($toDate), PDO::PARAM_INT];
         }
         if ($fromTime !== null) {
             $sql .= ' AND time >= ?';
-            $params[] = $this->timeStringToSeconds($fromTime);
+            $params[] = [$this->timeStringToSeconds($fromTime), PDO::PARAM_INT];
         }
         if ($toTime !== null) {
             $sql .= ' AND time <= ?';
-            $params[] = $this->timeStringToSeconds($toTime);
+            $params[] = [$this->timeStringToSeconds($toTime), PDO::PARAM_INT];
         }
 
         //Limits
@@ -58,15 +60,18 @@ class NotesService extends BaseService
         }
 
         $sql .= ' LIMIT ? OFFSET ?';
-        $params[] = $limit;
-        $params[] = ($page - 1) * $limit;
-
-        $debug1 = $this->db->fetchAssoc('SELECT COUNT(*) as cnt FROM notes');
-        $debug2 = $this->db->fetchAssoc('SELECT COUNT(*) as cnt FROM notes LIMIT ? OFFSET ?', $dbgParams = [$limit, (($page - 1) * $limit)]);
+        $params[] = [$limit, PDO::PARAM_INT];
+        $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 
         //sql
 
-        $rows = $this->db->fetchAll($sql, $params);
+        $statement = $this->db->prepare($sql, $params);
+        foreach ($params as $index => $param) {
+            $statement->bindValue($index + 1, $param[0], $param[1]);
+        }
+        $statement->execute();
+        $rows = $statement->fetchAll();
+
         $result = [];
         foreach ($rows as $line) {
             $result[] = $this->readFormat($line);

@@ -17,12 +17,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $app = new Application();
-        $app->register(new DoctrineServiceProvider(), array(
-            "db.options" => array(
-                "driver" => "pdo_sqlite",
-                "memory" => true
-            ),
-        ));
+        $app->register(new DoctrineServiceProvider(), \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams());
 
         $schemaManager = new SchemaManager($app['db']);
         $schemaManager->flushDatabase();
