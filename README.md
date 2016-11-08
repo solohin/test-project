@@ -39,6 +39,8 @@ Works for all roles
 - success - Auth was successful
 - token - Your API token (only if success === true)
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
 
 #### POST /v1/register
 Register new user.
@@ -54,6 +56,8 @@ Register new user.
 - roles - Array of roles, ['ROLE_USER'] by default
 - token - Your API token (only if success === true)
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
 
 ### Methods
 
@@ -74,6 +78,8 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - success - Note has been added or not
 - id - Id of newly added note
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
 
 #### PUT /notes/{id}
 Update note. 
@@ -91,6 +97,8 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 - success - Note has been added or not
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
 
 #### GET /notes/{id}
 Get note by ID. 
@@ -100,6 +108,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 - success - Note has found or not
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
 - note[id] - Note id
 - note[text] - Users comment to note
 - note[calories] - Amount of calories in the note
@@ -123,6 +132,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 - success - Note has found or not
 - error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
 - notes - array, contains:
     - id - Note id
     - text - Users comment to note
