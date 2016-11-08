@@ -68,12 +68,12 @@ $securityLoader = new SecurityLoader($app);
 $securityLoader->initTokenSecurity();
 
 //Fallback
-$app->match("/{anything}", function () use ($app){
+$app->match("/{anything}", function () use ($app) {
     return new JsonResponse([
         'success' => false,
         'error_message' => 'Method not found',
         'error_type' => ErrorTypes::METHOD_NOT_FOUND
-    ]);
+    ], 404);
 })->assert('anything', '.*');
 
 //Handle Exceptions
