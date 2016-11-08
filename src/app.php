@@ -52,6 +52,7 @@ if ($app['debug']) {
     $app->register(new VarDumperServiceProvider());
     //Create tables
     $app['schema_manager']->createTables();
+    \Solohin\ToptalExam\Debug::setLogger($app['monolog']);
 }
 
 //load services

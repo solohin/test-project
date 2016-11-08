@@ -23,36 +23,81 @@ class NotesController
 
     public function getList(Request $request)
     {
-        $response = [
-            'success' => true
-        ];
-        $notes = $this->notesService->getAll(
-            $request->get('user_id'),
-            $request->get('from_date'),
-            $request->get('to_date'),
-            $request->get('from_time'),
-            $request->get('to_time'),
-            $request->get('page', 1)
-        );
-        $response['notes'] = $notes;
-        return new JsonResponse($response);
-    }
-
-    public function getOne($id)
-    {
-        throw new \Exception('Method not implemented yet');
-    }
-
-    public function add(Request $request)
-    {
-        $userId = intval($request->get('user_id'));
-
+        $userId = $request->get('user_id', null);
         $role = $this->app['user']->getRoles()[0];
 
         if ($role === UserRoles::ROLE_MANAGER) {
             return new JsonResponse([
                 'success' => false,
-                'error_message' => 'Manager can nott add notes',
+                'error_message' => 'Manager can not read notes',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        } elseif ($role === UserRoles::ROLE_ADMIN) {
+            //its ok
+        } else {
+            $userId = $this->app['user']->getID();
+        }
+
+        $this->app['monolog']->addDebug('$userId = ' . print_r($userId));
+
+        try {
+            $notes = $this->notesService->getAll(
+                $userId,
+                $request->get('from_date'),
+                $request->get('to_date'),
+                $request->get('from_time'),
+                $request->get('to_time'),
+                $request->get('page', 1)
+            );
+            $response = ['success' => true];
+            $response['notes'] = $notes;
+            return new JsonResponse($response);
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
+    }
+
+    public function getOne($id)
+    {
+        $role = $this->app['user']->getRoles()[0];
+
+        if ($role === UserRoles::ROLE_MANAGER) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Manager can not read notes',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        } elseif ($role === UserRoles::ROLE_ADMIN) {
+            $userId = null;
+        } else {
+            $userId = $this->app['user']->getID();
+        }
+
+        try {
+            $note = $this->notesService->getOne($id, $userId);
+            $response = ['success' => !!$note];
+            if ($note) {
+                $response['note'] = $note;
+                return new JsonResponse($response);
+            } else {
+                $response['error_message'] = 'Note not found';
+                $response['error_type'] = ErrorTypes::NOTE_NOT_FOUND;
+                return new JsonResponse($response, 404);
+            }
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
+    }
+
+    public function add(Request $request)
+    {
+        $userId = intval($request->get('user_id'));
+        $role = $this->app['user']->getRoles()[0];
+
+        if ($role === UserRoles::ROLE_MANAGER) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Manager can not add notes',
                 'error_type' => ErrorTypes::PERMISSION_DENIED,
             ], 403);
         } elseif ($role === UserRoles::ROLE_ADMIN) {
@@ -85,6 +130,63 @@ class NotesController
         return new JsonResponse($response);
     }
 
+    public function update($id, Request $request)
+    {
+        $role = $this->app['user']->getRoles()[0];
+
+        if ($role === UserRoles::ROLE_MANAGER) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Manager can not update notes',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        } elseif ($role === UserRoles::ROLE_ADMIN) {
+            $userId = $request->get('user_id');
+            if (!is_null($userId)) {
+                $userId = (int)$userId;
+            }
+            $userIdFilter = null;
+        } else {
+            $userId = null;
+            $userIdFilter = $this->app['user']->getID();
+        }
+
+        $note = [
+            'text' => $request->get('text'),
+            'calories' => $request->get('calories'),
+            'user_id' => $userId,
+            'time' => $request->get('time'),
+            'date' => $request->get('date'),
+        ];
+
+        foreach ($note as $key => $value) {
+            if (is_null($value)) {
+                unset($note[$key]);
+            }
+        }
+        if (empty($note)) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Update fields must be filled.',
+                'error_type' => ErrorTypes::EMPTY_PARAMETERS,
+            ], 400);
+        }
+
+        try {
+            $success = $this->notesService->update($id, $note, $userIdFilter);
+            $response = ['success' => $success];
+            if ($success) {
+                return new JsonResponse($response);
+            } else {
+                $response['error_message'] = 'Note not found';
+                $response['error_type'] = ErrorTypes::NOTE_NOT_FOUND;
+                return new JsonResponse($response, 404);
+            }
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
+    }
+
     private function jsonException(\Exception $e)
     {
         $errorType = $this->notesService->getLastErrorType();
@@ -107,11 +209,6 @@ class NotesController
             'error_type' => $errorType,
             'success' => false
         ], $errorCode);
-    }
-
-    public function update($id, Request $request)
-    {
-        throw new \Exception('Method not implemented yet');
     }
 
     public function remove($id)

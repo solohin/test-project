@@ -14,9 +14,9 @@
         <log type="tap"/>
     </logging>
     <testsuites>
-        <!--<testsuite name="Services unit tests">-->
-            <!--<directory>./tests/Services</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="Services unit tests">
+            <directory>./tests/Services</directory>
+        </testsuite>
         <testsuite name="API functional tests">
             <directory>./tests/API</directory>
         </testsuite>

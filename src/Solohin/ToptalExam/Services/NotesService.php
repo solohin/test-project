@@ -3,6 +3,7 @@
 namespace Solohin\ToptalExam\Services;
 
 use PDO;
+use Solohin\ToptalExam\Debug;
 use Solohin\ToptalExam\ErrorTypes;
 
 class NotesService extends BaseService
@@ -72,8 +73,10 @@ class NotesService extends BaseService
         $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 
         //sql
+        Debug::debug(array_column($params, 0));
+        Debug::debug($sql);
 
-        $statement = $this->db->prepare($sql, $params);
+        $statement = $this->db->prepare($sql);
         foreach ($params as $index => $param) {
             $statement->bindValue($index + 1, $param[0], $param[1]);
         }
@@ -97,6 +100,7 @@ class NotesService extends BaseService
     public function update($id, $note, $userIdFilter = null)
     {
         $note = $this->writeFormat($note);
+
         $identifier = ['id' => $id];
         if ($userIdFilter !== null) {
             $identifier['user_id'] = $userIdFilter;
@@ -117,7 +121,7 @@ class NotesService extends BaseService
 
     private function dateToTimestamp($dateString)
     {
-        $date = \DateTime::createFromFormat('d.m.Y', $dateString);
+        $date = \DateTime::createFromFormat('d.m.Y H:i:s', $dateString . ' 00:00:00');
         if ($date instanceof \DateTime) {
             return $date->getTimestamp();
         } else {
@@ -176,7 +180,7 @@ class NotesService extends BaseService
     private function secondsToTimeString($seconds)
     {
         $hours = floor($seconds / (60 * 60));
-        $minutes = $seconds % (60 * 60);
+        $minutes = round(($seconds % (60 * 60)) / 60);
 
         return sprintf("%02d", $hours) . ':' . sprintf("%02d", $minutes);
     }

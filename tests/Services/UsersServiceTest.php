@@ -17,8 +17,9 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $app = new Application();
-        $app->register(new DoctrineServiceProvider(), \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams());
-
+        $app->register(new DoctrineServiceProvider(),
+            ["db.options" => \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams()]
+        );
         $schemaManager = new SchemaManager($app['db']);
         $schemaManager->flushDatabase();
 
@@ -95,6 +96,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['ROLE_USER'], $testUser['roles']);
 
     }
+
     public function testInsertMultipleRoles()
     {
         $insertId = $this->usersService->insert([

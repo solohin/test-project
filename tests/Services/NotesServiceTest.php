@@ -18,7 +18,9 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $app = new Application();
-        $app->register(new DoctrineServiceProvider(), \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams());
+        $app->register(new DoctrineServiceProvider(),
+            ["db.options" => \Solohin\ToptalExam\Tests\Utils\DataBase::getTestDBParams()]
+        );
 
         $schemaManager = new SchemaManager($app['db']);
         $schemaManager->flushDatabase();
@@ -30,7 +32,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         /*
          * 100 - 1 - 12:00 - 01.01.2017
          * 200 - 2 - 14:00 - 02.01.2017
-         * 300 - 1 - 17:40 - 01.01.2017
+         * 300 - 1 - 17:35 - 01.01.2017
          * 400 - 1 - 16:05 - 02.01.2017
          * 900 - 1 - 23:59 - 01.01.2017
          * 1200 - 1 - 00:00 - 03.01.2017
@@ -56,7 +58,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
             'text' => 'Third note',
             'calories' => 300,
             'user_id' => 1,
-            'time' => '17:40',
+            'time' => '17:35',
             'date' => '01.01.2017',
         ]);
 
@@ -81,8 +83,6 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
             'time' => '00:00',
             'date' => '03.01.2017',
         ]);
-
-        $usersService = new UsersService($app['db']);
     }
 
     private function assertArrayIsPartOfArray($expected, $actual)
@@ -158,7 +158,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
      * kCal User    Time    Date
      * 100  1       12:00   01.01.2017
      * 200  2       14:00   02.01.2017
-     * 300  1       17:40   01.01.2017
+     * 300  1       17:35   01.01.2017
      * 400  1       16:05   02.01.2017
      * 900  1       23:59   01.01.2017
      * 1200 1       00:00   03.01.2017
@@ -214,7 +214,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
             $userIdFilter = null,
             $fromDate = null,
             $toDate = null,
-            $fromTime = '17:40',
+            $fromTime = '17:35',
             $toTime = null
         );
         $this->assertEquals(1200, array_sum(array_column($notes, 'calories')));
@@ -224,7 +224,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
             $fromDate = null,
             $toDate = null,
             $fromTime = null,
-            $toTime = '17:40'
+            $toTime = '17:35'
         );
         $this->assertEquals(2200, array_sum(array_column($notes, 'calories')));
 
@@ -385,6 +385,17 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
         $id = 1;
         $note = $this->notesService->getOne($id);
         $note['calories'] = 99999;
+        $this->notesService->update($id, $note);
+
+        $newNote = $this->notesService->getOne($id);
+
+        $this->assertArrayIsPartOfArray($note, $newNote);
+    }
+    public function testUpdate1735()
+    {
+        $id = 1;
+        $note = $this->notesService->getOne($id);
+        $note['time'] = '17:35';
         $this->notesService->update($id, $note);
 
         $newNote = $this->notesService->getOne($id);

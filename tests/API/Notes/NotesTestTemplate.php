@@ -16,6 +16,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class NotesTestTemplate extends WebTestCase
 {
+    /** @var NotesService */
+    protected $notesService;
+
     protected $dummyUsers = [
         'user' => [
             'username' => 'dummyUser',
@@ -41,7 +44,7 @@ class NotesTestTemplate extends WebTestCase
 
     /*
      * 100 - 1 - 12:00 - 01.01.2017
-     * 200 - 2 - 14:00 - 02.01.2017
+     * 200 - 4 - 14:00 - 02.01.2017
      * 300 - 1 - 17:40 - 01.01.2017
      * 400 - 1 - 16:05 - 02.01.2017
      * 900 - 1 - 23:59 - 01.01.2017
@@ -50,9 +53,9 @@ class NotesTestTemplate extends WebTestCase
 
     private function insertDummyNotes()
     {
-        $notesService = new NotesService($this->app['db']);
+        $this->notesService = new NotesService($this->app['db']);
 
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'First note',
             'calories' => 100,
             'user_id' => 1,
@@ -60,7 +63,7 @@ class NotesTestTemplate extends WebTestCase
             'date' => '01.01.2017',
         ]);
 
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'Second note',
             'calories' => 200,
             'user_id' => 4,
@@ -68,7 +71,7 @@ class NotesTestTemplate extends WebTestCase
             'date' => '02.01.2017',
         ]);
 
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'Third note',
             'calories' => 300,
             'user_id' => 1,
@@ -76,21 +79,21 @@ class NotesTestTemplate extends WebTestCase
             'date' => '01.01.2017',
         ]);
 
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'Fourth note',
             'calories' => 400,
             'user_id' => 1,
             'time' => '16:05',
             'date' => '02.01.2017',
         ]);
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'Fifth note',
             'calories' => 900,
             'user_id' => 1,
             'time' => '23:59',
             'date' => '01.01.2017',
         ]);
-        $notesService->insert([
+        $this->notesService->insert([
             'text' => 'Sixth note',
             'calories' => 1200,
             'user_id' => 1,
