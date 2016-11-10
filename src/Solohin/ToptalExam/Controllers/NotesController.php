@@ -44,6 +44,7 @@ class NotesController extends BasicController
             );
             $response = ['success' => true];
             $response['notes'] = $notes;
+            $response['total_calories'] = array_sum(array_column($notes, 'calories'));
             return new JsonResponse($response);
         } catch (\Exception $e) {
             return $this->jsonException($e);
