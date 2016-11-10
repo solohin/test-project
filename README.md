@@ -2,18 +2,34 @@
 Write an application for the input of calories
 
 - User must be able to create an account and log in
-- When logged in, user can see a list of his meals and calories (user enters calories manually, no auto calculations!), also he should be able to edit and delete
-- Implement at least three roles with different permission levels: a regular user would only be able to CRUD on their owned records, a user manager would be able to CRUD users, and an admin would be able to CRUD all records and users.
+- When logged in, user can see a list of his meals and calories 
+(user enters calories manually, no auto calculations!), also he should 
+be able to edit and delete
+- Implement at least three roles with different permission levels: a 
+regular user would only be able to CRUD on their owned records, a user 
+manager would be able to CRUD users, and an admin would be able to CRUD 
+all records and users.
 - Each entry has a date, time, text, and num of calories
-- Filter by dates from-to, time from-to (e.g. how much calories have I had for lunch each day in the last month, if lunch is between 12 and 15h)
+- Filter by dates from-to, time from-to (e.g. how much calories have I 
+had for lunch each day in the last month, if lunch is between 12 and 
+15h)
 - User setting – Expected number of calories per day
-- When displayed, it goes green if the total for that day is less than expected number of calories per day, otherwise goes red
+- When displayed, it goes green if the total for that day is less than 
+expected number of calories per day, otherwise goes red
 - Minimal UI/UX design is needed.
-- All actions need to be done client side using AJAX, refreshing the page is not acceptable. (If a mobile app, disregard this)
-- REST API. Make it possible to perform all user actions via the API, including authentication (If a mobile application and you don’t know how to create your own backend you can use Firebase.com or similar services to create the API).
-- In any case you should be able to explain how a REST API works and demonstrate that by creating functional tests that use the REST Layer directly. Please be prepared to use REST clients like Postman, cURL, etc for this purpose.
+- All actions need to be done client side using AJAX, refreshing the 
+page is not acceptable. (If a mobile app, disregard this)
+- REST API. Make it possible to perform all user actions via the API, 
+including authentication (If a mobile application and you don’t know 
+how to create your own backend you can use Firebase.com or similar 
+services to create the API).
+- In any case you should be able to explain how a REST API works and 
+demonstrate that by creating functional tests that use the REST Layer 
+directly. Please be prepared to use REST clients like Postman, cURL, 
+etc for this purpose.
 - Bonus: unit and e2e tests!
-- You will not be marked on graphic design, however, do try to keep it as tidy as possible.
+- You will not be marked on graphic design, however, do try to keep it 
+as tidy as possible.
 
 NOTE: Please keep in mind that this is the project that will be used to evaluate your skills. The project will be evaluated as if you were delivering it to a customer. We expect you to make sure that the app is fully functional and doesn’t have any obvious missing pieces. The deadline for the project is 2 weeks from today.
 
@@ -61,7 +77,7 @@ Register new user.
 
 ### Methods
 
-#### POST /notes
+#### POST /v1/notes
 Creates new note.
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
@@ -81,7 +97,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - error_type - error type constant (only if success === false)
 
 
-#### PUT /notes/{id}
+#### PUT /v1/notes/{id}
 Update note. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
@@ -99,7 +115,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - error_message - Error text for user (only if success === false)
 - error_type - error type constant (only if success === false)
 
-#### DELETE /notes/{id}
+#### DELETE /v1/notes/{id}
 Delete note by ID. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
@@ -109,7 +125,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - error_message - Error text for user (only if success === false)
 - error_type - error type constant (only if success === false)
 
-#### GET /notes/{id}
+#### GET /v1/notes/{id}
 Get note by ID. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
@@ -125,7 +141,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - note[time] - Time of note in format "hh:mm", for example "23:57"
 - note[date] - Date of note in format "dd.mm.yyyy", for example "31.12.2016"
 
-#### GET /notes/
+#### GET /v1/notes/
 Get filtered notes list. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
@@ -152,6 +168,76 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
     - date - Date of note in format "dd.mm.yyyy", for example "31.12.2016"
     - daily_normal - if the total for that day is less than expected number of calories per day 
 - total_calories -  summ of calories in all notes
+
+#### POST /v1/users
+Not exists. Please user /v1/register
+
+#### DELETE /v1/users/{id}
+Delete user by ID. 
+Works for ROLE_ADMIN or ROLE_MANAGER. Manager can not delete admin
+
+**Response**
+
+- success - User was deleted or not
+- error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
+#### GET /v1/users/{id}
+Get user by ID. 
+Works for ROLE_MANAGER, ROLE_ADMIN or ROLE_USER(for owner)
+
+**Response**
+
+- success - User has found or not
+- error_message - Error text for user (only if success === false)
+- error_type - Error type constant (only if success === false)
+- user[id] - Note id
+- user[username] - Username
+- user[roles] - Array of 1 role: ROLE_ADMIN, ROLE_USER or ROLE_MANAGER
+- user[daily_normal] - User's daily normal calories count
+- user[can_edit] - Can you edit this user
+
+#### GET /v1/users/me
+Same as GET /v1/users/[your id here]
+
+#### GET /v1/notes/
+Get paged users list. 
+Works for ROLE_ADMIN or ROLE_MANAGER
+
+**Request**
+
+- page - Optional page number starting from 1. Default = 1. 500 users per page
+
+**Response**
+
+- success - Note has found or not
+- error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+- notes - array, contains:
+    - id - Note id
+    - username - Username
+    - role - ROLE_ADMIN, ROLE_USER or ROLE_MANAGER
+    - daily_normal - User's daily normal calories count
+    - can_edit - Can you edit this user
+
+#### PUT /v1/users/{id}
+Update user. 
+Works for ROLE_ADMIN, ROLE_MANAGER(can update all users except ROLE_ADMIN), or ROLE_USER(for owner)
+
+**Request**
+
+- username - New username, optional between 4 and 32 symbols. Only for admin and manager
+- role - New role for user(ROLE_ADMIN, ROLE_USER, ROLE_MANAGER). Only for admin and manager
+- daily_normal - New daily normal calories between 1 and 32000
+
+**Response**
+
+- success - User has been updated or not
+- error_message - Error text for user (only if success === false)
+- error_type - error type constant (only if success === false)
+
+#### PUT /v1/users/me
+Same as PUT /v1/users/[your id here]
 
 ### Constants
 

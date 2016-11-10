@@ -17,14 +17,14 @@ class UsersGetOneTest extends UsersTestTemplate
         $responseDataManager = $this->makeJsonRequest('/v1/users/3', 'get', 'manager', [], true)['user'];
 
         $this->assertEquals('dummyAdmin', $responseDataAdmin['username']);
-        $this->assertEquals(['ROLE_ADMIN'], $responseDataAdmin['roles']);
+        $this->assertEquals('ROLE_ADMIN', $responseDataAdmin['role']);
         $this->assertEquals(400, $responseDataAdmin['daily_normal']);
         $this->assertEquals(false, $responseDataAdmin['can_edit']);
         $this->assertArrayNotHasKey('token', $responseDataAdmin);
         $this->assertArrayNotHasKey('password', $responseDataAdmin);
 
         $this->assertEquals('dummyManager', $responseDataManager['username']);
-        $this->assertEquals(['ROLE_MANAGER'], $responseDataManager['roles']);
+        $this->assertEquals('ROLE_MANAGER', $responseDataManager['role']);
         $this->assertEquals(400, $responseDataManager['daily_normal']);
         $this->assertEquals(true, $responseDataManager['can_edit']);
         $this->assertArrayNotHasKey('token', $responseDataAdmin);
@@ -37,14 +37,14 @@ class UsersGetOneTest extends UsersTestTemplate
         $responseDataManager = $this->makeJsonRequest('/v1/users/3', 'get', 'manager', [], true)['user'];
 
         $this->assertEquals('dummyAdmin', $responseDataAdmin['username']);
-        $this->assertEquals(['ROLE_ADMIN'], $responseDataAdmin['roles']);
+        $this->assertEquals('ROLE_ADMIN', $responseDataAdmin['role']);
         $this->assertEquals(400, $responseDataAdmin['daily_normal']);
         $this->assertEquals(true, $responseDataAdmin['can_edit']);
         $this->assertArrayNotHasKey('token', $responseDataAdmin);
         $this->assertArrayNotHasKey('password', $responseDataAdmin);
 
         $this->assertEquals('dummyManager', $responseDataManager['username']);
-        $this->assertEquals(['ROLE_MANAGER'], $responseDataManager['roles']);
+        $this->assertEquals('ROLE_MANAGER', $responseDataManager['role']);
         $this->assertEquals(400, $responseDataManager['daily_normal']);
         $this->assertEquals(true, $responseDataManager['can_edit']);
         $this->assertArrayNotHasKey('token', $responseDataAdmin);

@@ -30,6 +30,7 @@ class UsersGetTest extends UsersTestTemplate
         //test data structure
         $this->assertArrayHasKey('username', $responseData[0]);
         $this->assertArrayHasKey('can_edit', $responseData[0]);
+        $this->assertArrayHasKey('role', $responseData[0]);
         $this->assertArrayHasKey('daily_normal', $responseData[0]);
         $this->assertArrayNotHasKey('token', $responseData[0]);
         $this->assertArrayNotHasKey('password', $responseData[0]);

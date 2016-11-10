@@ -12,7 +12,9 @@
       "Solohin": "src/"
     },
     "files": [
-      "tests/API/Notes/NotesTestTemplate.php", "tests/Utils/DataBase.php"
+      "tests/API/Notes/NotesTestTemplate.php",
+      "tests/API/Users/UsersTestTemplate.php",
+      "tests/Utils/DataBase.php"
     ]
   },
   "require-dev": {
