@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class UsersTestTemplate extends WebTestCase
 {
     /** @var UsersService */
-    protected $notesService;
+    protected $usersService;
 
     protected $dummyUsers = [
         'user' => [
@@ -47,17 +47,17 @@ class UsersTestTemplate extends WebTestCase
 
     private function insertDummyUsers()
     {
-        $usersService = new UsersService($this->app['db']);
+        $this->usersService = new UsersService($this->app['db']);
 
         //Create users
-        $id = $usersService->insert($this->dummyUsers['user']);
-        $this->dummyUsers['user'] = $usersService->getOne($id);
+        $id = $this->usersService->insert($this->dummyUsers['user']);
+        $this->dummyUsers['user'] = $this->usersService->getOne($id);
 
-        $id = $usersService->insert($this->dummyUsers['admin']);
-        $this->dummyUsers['admin'] = $usersService->getOne($id);
+        $id = $this->usersService->insert($this->dummyUsers['admin']);
+        $this->dummyUsers['admin'] = $this->usersService->getOne($id);
 
-        $id = $usersService->insert($this->dummyUsers['manager']);
-        $this->dummyUsers['manager'] = $usersService->getOne($id);
+        $id = $this->usersService->insert($this->dummyUsers['manager']);
+        $this->dummyUsers['manager'] = $this->usersService->getOne($id);
     }
 
     public function setUp()
