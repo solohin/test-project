@@ -20,6 +20,12 @@ class NotesGetTest extends NotesTestTemplate
         $this->assertEquals(3100, $this->caloriesSumm500Notes());
     }
 
+    public function testTotalCalories()
+    {
+        $totalCalories = $this->makeJsonRequest('/v1/notes', 'GET', 'user', [], true)['total_calories'];
+        $this->assertEquals(2900, $totalCalories);
+    }
+
     public function testDailyNormal()
     {
         $notes = $this->get500Notes();
