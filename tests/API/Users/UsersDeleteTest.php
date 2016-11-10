@@ -74,10 +74,10 @@ class UsersDeleteTest extends UsersTestTemplate
         $this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true);
 
         //Delete myself
-        $this->makeJsonRequest('/v1/users/3', 'GET', 'admin', [], true);
+        $this->makeJsonRequest('/v1/users/me', 'DELETE', 'admin', [], true);
 
         //I have auth error
         $response = $this->makeJsonRequest('/v1/users', 'GET', 'admin', [], false);
-        $this->assertEquals('wrong_token', $response['token']);
+        $this->assertEquals('wrong_token', $response['error_type']);
     }
 }

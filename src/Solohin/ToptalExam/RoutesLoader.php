@@ -56,17 +56,28 @@ class RoutesLoader
     private function bindNotes(ControllerCollection &$api)
     {
         $api->post('/notes/', "notes.controller:add");
-        $api->post('/notes', "notes.controller:add");
         $api->put('/notes/{id}', "notes.controller:update");
         $api->get('/notes/{id}', "notes.controller:getOne");
         $api->get('/notes/', "notes.controller:getList");
-        $api->get('/notes', "notes.controller:getList");
         $api->delete('/notes/{id}', "notes.controller:remove");
+
+        //no-slash aliases
+        $api->get('/notes', "notes.controller:getList");
+        $api->post('/notes', "notes.controller:add");
     }
 
     private function bindUsers(ControllerCollection &$api)
     {
-        $api->delete('/users/{id}', "notes.controller:remove");
+        //me routes
+        $api->delete('/users/me', "users.controller:removeMe");
+
+        //basic routes
+        $api->delete('/users/{id}', "users.controller:remove");
+        $api->get('/users/{id}', "users.controller:getOne");
+        $api->get('/users/', "users.controller:getAll");
+
+        //no-slash aliases
+        $api->get('/users', "users.controller:getAll");
     }
 }
 

@@ -174,7 +174,7 @@ Not exists. Please user /v1/register
 
 #### DELETE /v1/users/{id}
 Delete user by ID. 
-Works for ROLE_ADMIN or ROLE_MANAGER. Manager can not delete admin
+Works for ROLE_ADMIN or ROLE_MANAGER(manager can delete only ROLE_USER and himself). Manager can not delete admin
 
 **Response**
 
@@ -225,7 +225,7 @@ Works for ROLE_ADMIN or ROLE_MANAGER
 
 #### PUT /v1/users/{id}
 Update user. 
-Works for ROLE_ADMIN, ROLE_MANAGER(can update all users except ROLE_ADMIN), or ROLE_USER(for owner)
+Works for ROLE_ADMIN, ROLE_MANAGER(manager can edit only ROLE_USER and himself), or ROLE_USER(for owner)
 
 **Request**
 

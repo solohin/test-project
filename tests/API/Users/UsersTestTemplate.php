@@ -58,6 +58,8 @@ class UsersTestTemplate extends WebTestCase
 
         $id = $this->usersService->insert($this->dummyUsers['manager']);
         $this->dummyUsers['manager'] = $this->usersService->getOne($id);
+
+        $this->usersService->insert($this->dummyUsers['user2']);
     }
 
     public function setUp()
