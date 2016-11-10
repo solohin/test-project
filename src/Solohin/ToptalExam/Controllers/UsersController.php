@@ -88,13 +88,27 @@ class UsersController extends BasicController
         }
     }
 
+    public function getMe()
+    {
+        return $this->getOne($this->app['user']->getId());
+    }
+
     public function getOne($id)
     {
+        $role = $this->app['user']->getRoles()[0];
+        if ($role == UserRoles::ROLE_USER && $id != $this->app['user']->getId()) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'You can not delete this user',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        }
+
         try {
             $user = $this->service->getOne($id);
             $response = ['success' => !!$user];
             if ($user) {
-                $response['user'] = $user;
+                $response['user'] = $this->transformUser($user);
                 return new JsonResponse($response);
             } else {
                 $response['error_message'] = 'User not found';
@@ -104,5 +118,16 @@ class UsersController extends BasicController
         } catch (\Exception $e) {
             return $this->jsonException($e);
         }
+    }
+
+    private function transformUser($user)
+    {
+        $user['role'] = isset($user['roles'][0]) ? $user['roles'][0] : '';
+        $user['can_edit'] = $this->ICanEditUser($user);
+
+        unset($user['roles']);
+        unset($user['token']);
+        unset($user['password']);
+        return $user;
     }
 }

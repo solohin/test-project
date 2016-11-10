@@ -22,6 +22,7 @@ class UsersGetOneTest extends UsersTestTemplate
         $this->assertEquals(false, $responseDataAdmin['can_edit']);
         $this->assertArrayNotHasKey('token', $responseDataAdmin);
         $this->assertArrayNotHasKey('password', $responseDataAdmin);
+        $this->assertArrayNotHasKey('roles', $responseDataAdmin);
 
         $this->assertEquals('dummyManager', $responseDataManager['username']);
         $this->assertEquals('ROLE_MANAGER', $responseDataManager['role']);
@@ -33,8 +34,8 @@ class UsersGetOneTest extends UsersTestTemplate
 
     public function testGetOneForAdmin()
     {
-        $responseDataAdmin = $this->makeJsonRequest('/v1/users/2', 'get', 'manager', [], true)['user'];
-        $responseDataManager = $this->makeJsonRequest('/v1/users/3', 'get', 'manager', [], true)['user'];
+        $responseDataAdmin = $this->makeJsonRequest('/v1/users/2', 'get', 'admin', [], true)['user'];
+        $responseDataManager = $this->makeJsonRequest('/v1/users/3', 'get', 'admin', [], true)['user'];
 
         $this->assertEquals('dummyAdmin', $responseDataAdmin['username']);
         $this->assertEquals('ROLE_ADMIN', $responseDataAdmin['role']);
@@ -54,13 +55,13 @@ class UsersGetOneTest extends UsersTestTemplate
     public function testGetOneForUserNotOwner()
     {
         $responseData = $this->makeJsonRequest('/v1/users/3', 'get', 'user', [], false);
-        $this->assertEquals('user_not_found', $responseData['error_type']);
+        $this->assertEquals('permission_denied', $responseData['error_type']);
     }
 
     public function testGetOneForUserOwner()
     {
-        $responseData1 = $this->makeJsonRequest('/v1/users/1', 'get', 'user', [], true);
-        $responseDataMe = $this->makeJsonRequest('/v1/users/me', 'get', 'user', [], true);
+        $responseData1 = $this->makeJsonRequest('/v1/users/1', 'get', 'user', [], true)['user'];
+        $responseDataMe = $this->makeJsonRequest('/v1/users/me', 'get', 'user', [], true)['user'];
         $this->assertEquals($responseData1, $responseDataMe);
 
         $this->assertArrayNotHasKey('token', $responseData1);

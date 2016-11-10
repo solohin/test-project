@@ -70,6 +70,7 @@ class RoutesLoader
     {
         //me routes
         $api->delete('/users/me', "users.controller:removeMe");
+        $api->get('/users/me', "users.controller:getMe");
 
         //basic routes
         $api->delete('/users/{id}', "users.controller:remove");
