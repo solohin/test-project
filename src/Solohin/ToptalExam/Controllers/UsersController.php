@@ -12,7 +12,7 @@ namespace Solohin\ToptalExam\Controllers;
 use Solohin\ToptalExam\ErrorTypes;
 use Solohin\ToptalExam\Security\UserRoles;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Symfony\Component\HttpFoundation\Request;
 
 class UsersController extends BasicController
 {
@@ -46,11 +46,26 @@ class UsersController extends BasicController
         return $this->remove($this->app['user']->getId());
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        return new JsonResponse([
-            'success' => true,
-        ]);
+        $role = $this->app['user']->getRoles()[0];
+        if ($role == UserRoles::ROLE_USER) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'You can not list users',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        }
+        try {
+            $users = $this->service->getAll($request->get('page', 1));
+            $users = array_map([$this, 'transformUser'], $users);
+
+            $response = ['success' => true];
+            $response['users'] = $users;
+            return new JsonResponse($response);
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
     }
 
     public function remove($id)

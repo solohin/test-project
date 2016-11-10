@@ -4,11 +4,8 @@ namespace Solohin\ToptalExam\Controllers;
 
 use Solohin\ToptalExam\ErrorTypes;
 use Solohin\ToptalExam\Security\UserRoles;
-use Solohin\ToptalExam\Services\BaseService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Solohin\ToptalExam\Services\NotesService;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
 class NotesController extends BasicController
@@ -30,8 +27,6 @@ class NotesController extends BasicController
         } else {
             $userId = $this->app['user']->getID();
         }
-
-        $this->app['monolog']->addDebug('$userId = ' . print_r($userId));
 
         try {
             $notes = $this->service->getAll(

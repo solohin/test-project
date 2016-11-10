@@ -42,7 +42,7 @@ class UsersGetTest extends UsersTestTemplate
         $toAddCount = 500;
         for ($i = 0; $i < $toAddCount; $i++) {
             $this->usersService->insert([
-                'name' => 'username__' . $i,
+                'username' => 'username__' . $i,
                 'password' => '123' . $i,
             ]);
         }
@@ -54,7 +54,7 @@ class UsersGetTest extends UsersTestTemplate
 
     public function testGetForAdmin()
     {
-        $responseData = $this->makeJsonRequest('/v1/users', 'GET', 'manager', [], true)['users'];
+        $responseData = $this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true)['users'];
 
         $this->assertEquals(4, count($responseData));
 
@@ -71,7 +71,7 @@ class UsersGetTest extends UsersTestTemplate
 
     public function testGetForUser()
     {
-        $responseData = $this->makeJsonRequest('/v1/users', 'GET', 'manager', [], false);
+        $responseData = $this->makeJsonRequest('/v1/users', 'GET', 'user', [], false);
         $this->assertEquals('permission_denied', $responseData['error_type']);
     }
 }

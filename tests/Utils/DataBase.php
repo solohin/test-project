@@ -12,15 +12,15 @@ namespace Solohin\ToptalExam\Tests\Utils;
 
 class DataBase
 {
-    const DB_TYPE = 'mysql';
+    const DB_TYPE = 'sqlite';
 
     public static function getTestDBParams()
     {
         if (self::DB_TYPE === 'sqlite') {
-//            return [
-//                "driver" => "pdo_sqlite",
-//                "memory" => true
-//            ];
+            return [
+                "driver" => "pdo_sqlite",
+                "memory" => true
+            ];
         } else {
             return [
                 "driver" => "pdo_mysql",

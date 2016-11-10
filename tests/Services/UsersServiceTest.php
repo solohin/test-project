@@ -10,6 +10,7 @@ use Solohin\ToptalExam\Services\UsersService;
 
 class UsersServiceTest extends \PHPUnit_Framework_TestCase
 {
+    const ON_PAGE = 500;
 
     /** @var $usersService UsersService */
     private $usersService;
@@ -202,6 +203,42 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
 
         $deletedUser = $this->usersService->getOne('2');
         $this->assertEquals(false, $deletedUser);
+    }
+
+    public function testGetAll()
+    {
+        $users = $this->usersService->getAll();
+        $this->assertCount(2, $users);
+    }
+    public function testPaging()
+    {
+        $startCount = count($this->usersService->getAll());
+        for ($i = 0; $i < self::ON_PAGE; $i++) {
+            $this->usersService->insert([
+                'username' => 'Test #' . $i,
+                'password' => 100,
+            ]);
+        }
+        $firstPage = $this->usersService->getAll();
+
+        $this->assertCount(self::ON_PAGE, $firstPage);
+
+        $secondPage = $this->usersService->getAll($page = 2);
+
+        //Real pages
+        $this->assertCount($startCount, $secondPage);
+
+        $thirdPage = $this->usersService->getAll($page = 3);
+
+        //Fake page
+        $this->assertCount(0, $thirdPage);
+
+        $zeroPage = $this->usersService->getAll($page = 0);
+        $minusOnePage = $this->usersService->getAll($page = -1);
+
+        //And wrong pages is first page
+        $this->assertEquals($firstPage, $zeroPage);
+        $this->assertEquals($firstPage, $minusOnePage);
     }
 
 }
