@@ -94,7 +94,60 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
         $this->assertEquals(['ROLE_USER'], $testUser['roles']);
+    }
 
+    public function testDailyNormal()
+    {
+        //default
+        $insertId = $this->usersService->insert([
+            'username' => 'test 3',
+            'password' => 'testpass2',
+            'token' => 'some token2',
+            'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
+        ]);
+        $testUser = $this->usersService->getOne($insertId);
+
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
+        $this->assertEquals(2000, $testUser['daily_normal']);
+
+        //custom
+        $insertId = $this->usersService->insert([
+            'username' => 'test 3',
+            'password' => 'testpass2',
+            'token' => 'some token2',
+            'daily_normal' => 5000,
+            'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
+        ]);
+        $testUser = $this->usersService->getOne($insertId);
+
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
+        $this->assertEquals(5000, $testUser['daily_normal']);
+
+        //zero
+        $insertId = $this->usersService->insert([
+            'username' => 'test 3',
+            'password' => 'testpass2',
+            'token' => 'some token2',
+            'daily_normal' => 0,
+            'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
+        ]);
+        $testUser = $this->usersService->getOne($insertId);
+
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
+        $this->assertEquals(2000, $testUser['daily_normal']);
+
+        //wrong
+        $insertId = $this->usersService->insert([
+            'username' => 'test 3',
+            'password' => 'testpass2',
+            'token' => 'some token2',
+            'daily_normal' => 'wrong value',
+            'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
+        ]);
+        $testUser = $this->usersService->getOne($insertId);
+
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
+        $this->assertEquals(2000, $testUser['daily_normal']);
     }
 
     public function testInsertMultipleRoles()
