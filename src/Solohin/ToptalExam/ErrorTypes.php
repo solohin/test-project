@@ -27,6 +27,7 @@ class ErrorTypes
     const NO_TOKEN = 'no_token';
 
     const NOTE_NOT_FOUND = 'note_not_found';
+    const USER_NOT_FOUND = 'user_not_found';
     const EMPTY_PARAMETERS = 'empty_parameters';
 
     const PERMISSION_DENIED = 'permission_denied';

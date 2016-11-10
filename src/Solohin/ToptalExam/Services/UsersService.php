@@ -9,7 +9,7 @@ class UsersService extends BaseService
     public function getOne($id)
     {
         return $this->postFormatUser(
-            $this->db->fetchAssoc("SELECT id, username, password_hash as password, token, roles FROM users WHERE id=?", [(int)$id])
+            $this->db->fetchAssoc("SELECT id, username, password_hash as password, token, roles, daily_normal FROM users WHERE id=?", [(int)$id])
         );
     }
 
@@ -109,4 +109,8 @@ class UsersService extends BaseService
         return $user;
     }
 
+    public function getAll()
+    {
+        throw new \Exception('Not realized yet');
+    }
 }

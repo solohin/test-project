@@ -100,7 +100,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
     {
         //default
         $insertId = $this->usersService->insert([
-            'username' => 'test 3',
+            'username' => 'test 33',
             'password' => 'testpass2',
             'token' => 'some token2',
             'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
@@ -112,7 +112,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
 
         //custom
         $insertId = $this->usersService->insert([
-            'username' => 'test 3',
+            'username' => 'test 34',
             'password' => 'testpass2',
             'token' => 'some token2',
             'daily_normal' => 5000,
@@ -123,9 +123,9 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
         $this->assertEquals(5000, $testUser['daily_normal']);
 
-        //zero
+        //zero as is
         $insertId = $this->usersService->insert([
-            'username' => 'test 3',
+            'username' => 'test 35',
             'password' => 'testpass2',
             'token' => 'some token2',
             'daily_normal' => 0,
@@ -134,11 +134,24 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
         $testUser = $this->usersService->getOne($insertId);
 
         $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
-        $this->assertEquals(2000, $testUser['daily_normal']);
+        $this->assertEquals(0, $testUser['daily_normal']);
 
-        //wrong
+        //-1 is zero
         $insertId = $this->usersService->insert([
-            'username' => 'test 3',
+            'username' => 'test 353',
+            'password' => 'testpass2',
+            'token' => 'some token2',
+            'daily_normal' => -1,
+            'roles' => ['ROLE_ADMIN', 'ROLE_MANAGER']
+        ]);
+        $testUser = $this->usersService->getOne($insertId);
+
+        $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
+        $this->assertEquals(0, $testUser['daily_normal']);
+
+        //wrong values to 0
+        $insertId = $this->usersService->insert([
+            'username' => 'test 888',
             'password' => 'testpass2',
             'token' => 'some token2',
             'daily_normal' => 'wrong value',
@@ -147,7 +160,7 @@ class UsersServiceTest extends \PHPUnit_Framework_TestCase
         $testUser = $this->usersService->getOne($insertId);
 
         $this->assertEquals((string)$insertId, $testUser['id'], 'Test id = ' . $insertId . ', test user = ' . print_r($testUser, 1));
-        $this->assertEquals(2000, $testUser['daily_normal']);
+        $this->assertEquals(0, $testUser['daily_normal']);
     }
 
     public function testInsertMultipleRoles()

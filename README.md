@@ -182,6 +182,9 @@ Works for ROLE_ADMIN or ROLE_MANAGER. Manager can not delete admin
 - error_message - Error text for user (only if success === false)
 - error_type - error type constant (only if success === false)
 
+#### DELETE /v1/users/me
+Same as DELETE /v1/users/[your id here]
+
 #### GET /v1/users/{id}
 Get user by ID. 
 Works for ROLE_MANAGER, ROLE_ADMIN or ROLE_USER(for owner)

@@ -4,22 +4,15 @@ namespace Solohin\ToptalExam\Controllers;
 
 use Solohin\ToptalExam\ErrorTypes;
 use Solohin\ToptalExam\Security\UserRoles;
+use Solohin\ToptalExam\Services\BaseService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Solohin\ToptalExam\Services\NotesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
-class NotesController
+class NotesController extends BasicController
 {
-    private $notesService;
-    private $app;
-
-    public function __construct(NotesService $service, \Silex\Application $app)
-    {
-        $this->notesService = $service;
-        $this->app = $app;
-    }
 
     public function getList(Request $request)
     {
@@ -41,7 +34,7 @@ class NotesController
         $this->app['monolog']->addDebug('$userId = ' . print_r($userId));
 
         try {
-            $notes = $this->notesService->getAll(
+            $notes = $this->service->getAll(
                 $userId,
                 $request->get('from_date'),
                 $request->get('to_date'),
@@ -74,7 +67,7 @@ class NotesController
         }
 
         try {
-            $note = $this->notesService->getOne($id, $userId);
+            $note = $this->service->getOne($id, $userId);
             $response = ['success' => !!$note];
             if ($note) {
                 $response['note'] = $note;
@@ -123,7 +116,7 @@ class NotesController
             'date' => $request->get('date'),
         ];
         try {
-            $response['id'] = $this->notesService->insert($note);
+            $response['id'] = $this->service->insert($note);
         } catch (\Exception $e) {
             return $this->jsonException($e);
         }
@@ -173,7 +166,7 @@ class NotesController
         }
 
         try {
-            $success = $this->notesService->update($id, $note, $userIdFilter);
+            $success = $this->service->update($id, $note, $userIdFilter);
             $response = ['success' => $success];
             if ($success) {
                 return new JsonResponse($response);
@@ -185,30 +178,6 @@ class NotesController
         } catch (\Exception $e) {
             return $this->jsonException($e);
         }
-    }
-
-    private function jsonException(\Exception $e)
-    {
-        $errorType = $this->notesService->getLastErrorType();
-        $errorMessage = $e->getMessage();
-        $errorCode = $e->getCode();
-
-        if ($errorCode < 200) {
-            $errorCode = 500;
-        }
-
-        if (empty($errorType)) {
-            $errorType = ErrorTypes::INTERNAL_ERROR;
-            $errorMessage = 'Something goes wrong. Please email screenshot to solohin.i@gmail.com';
-
-            $this->app['monolog']->addError($e->getMessage());
-            $this->app['monolog']->addError($e->getTraceAsString());
-        }
-        return new JsonResponse([
-            'error_message' => $errorMessage,
-            'error_type' => $errorType,
-            'success' => false
-        ], $errorCode);
     }
 
     public function remove($id)
@@ -228,7 +197,7 @@ class NotesController
         }
 
         try {
-            $deleted = $this->notesService->delete($id, $userId);
+            $deleted = $this->service->delete($id, $userId);
             $response = ['success' => $deleted];
             if ($deleted) {
                 return new JsonResponse($response);

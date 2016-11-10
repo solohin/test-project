@@ -3,18 +3,10 @@
 namespace Solohin\ToptalExam\Services;
 
 use PDO;
-use Solohin\ToptalExam\Debug;
 use Solohin\ToptalExam\ErrorTypes;
 
 class NotesService extends BaseService
 {
-    private $lastErrorType = '';
-
-    public function getLastErrorType()
-    {
-        return $this->lastErrorType;
-    }
-
     public function getOne($id, $userIdFilter = null)
     {
         $sql = "SELECT id, text, calories, user_id, date, time FROM notes WHERE id=?";

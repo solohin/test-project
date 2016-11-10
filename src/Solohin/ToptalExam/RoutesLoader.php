@@ -26,6 +26,9 @@ class RoutesLoader
         $this->app['notes.controller'] = function () {
             return new Controllers\NotesController($this->app['notes.service'], $this->app);
         };
+        $this->app['users.controller'] = function () {
+            return new Controllers\UsersController($this->app['users.service'], $this->app);
+        };
     }
 
     public function bindRoutesToControllers()
@@ -35,6 +38,7 @@ class RoutesLoader
         $this->bindLogin($api);
         $this->bindRegister($api);
         $this->bindNotes($api);
+        $this->bindUsers($api);
 
         $this->app->mount('/' . $this->app["api.version"], $api);
     }
@@ -58,6 +62,11 @@ class RoutesLoader
         $api->get('/notes/', "notes.controller:getList");
         $api->get('/notes', "notes.controller:getList");
         $api->delete('/notes/{id}', "notes.controller:remove");
+    }
+
+    private function bindUsers(ControllerCollection &$api)
+    {
+        $api->delete('/users/{id}', "notes.controller:remove");
     }
 }
 
