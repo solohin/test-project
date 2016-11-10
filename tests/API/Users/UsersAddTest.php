@@ -13,21 +13,25 @@ class UsersAddTest extends UsersTestTemplate
 {
     public function testAddForAdmin()
     {
-        //TODO implement
+        $inserted = $this->makeJsonRequest('/v1/users', 'POST', 'admin', [
+            'username' => 'test 1',
+        ], false);
+        $this->assertEquals('method_not_found', $inserted['error_type']);
     }
 
     public function testAddForManager()
     {
-        //TODO implement
+        $inserted = $this->makeJsonRequest('/v1/users', 'POST', 'manager', [
+            'username' => 'test 1',
+        ], false);
+        $this->assertEquals('method_not_found', $inserted['error_type']);
     }
 
     public function testAddForUser()
     {
-        //TODO implement
-    }
-
-    public function testAddWithRole()
-    {
-        //TODO implement
+        $inserted = $this->makeJsonRequest('/v1/users', 'POST', 'user', [
+            'username' => 'test 1',
+        ], false);
+        $this->assertEquals('method_not_found', $inserted['error_type']);
     }
 }
