@@ -43,7 +43,7 @@ class UsersController extends BasicController
 
     public function removeMe()
     {
-        return $this->remove($this->app['user']->getId());
+        return $this->remove((int)$this->app['user']->getId());
     }
 
     public function getAll(Request $request)
@@ -139,7 +139,19 @@ class UsersController extends BasicController
             $user['daily_normal'] = $dailyNormal;
         }
 
+        //check on changes
+        if (
+            (!isset($user['roles']) || $user['roles'] === $userToEdit['roles'])
+            && (!isset($user['username']) || $user['username'] === $userToEdit)
+            && (!isset($user['daily_normal']) || $user['daily_normal'] == $userToEdit['daily_normal'])
+        ) {
+            //no changes - just return
+            return new JsonResponse(['success' => true]);
+        }
+
         try {
+
+
             $success = $this->service->update($id, $user);
             $response = ['success' => $success];
             if ($success) {
@@ -156,7 +168,7 @@ class UsersController extends BasicController
 
     public function updateMe(Request $request)
     {
-        return $this->update($this->app['user']->getId(), $request);
+        return $this->update((int)$this->app['user']->getId(), $request);
     }
 
     public function remove($id)

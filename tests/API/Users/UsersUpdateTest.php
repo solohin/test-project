@@ -82,6 +82,12 @@ class UsersUpdateTest extends UsersTestTemplate
         $this->assertEquals(2000, (int)$user['daily_normal']);
     }
 
+    public function testNotChanged()
+    {
+        $user = $this->makeJsonRequest('/v1/users/me', 'GET', 'user', [], true)['user'];
+        $this->makeJsonRequest('/v1/users/me', 'PUT', 'user', ['daily_normal' => $user['daily_normal']], true);
+    }
+
     public function testIDChange()
     {
         $this->makeJsonRequest('/v1/users/1', 'PUT', 'admin', ['id' => 7], true);

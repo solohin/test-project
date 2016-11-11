@@ -57,7 +57,7 @@ class NotesUpdateTest extends NotesTestTemplate
 
     public function testUpdateUserNotOwner()
     {
-        $responseData = $this->makeJsonRequest('/v1/notes/2', 'PUT', 'user', ['text'=>'1123'], false);
+        $responseData = $this->makeJsonRequest('/v1/notes/2', 'PUT', 'user', ['text' => '1123'], false);
         $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
 
@@ -95,17 +95,24 @@ class NotesUpdateTest extends NotesTestTemplate
         $this->assertEquals('permission_denied', $responseData['error_type'], print_r($responseData, 1));
     }
 
+    public function testNotChanged()
+    {
+        $note = $this->makeJsonRequest('/v1/notes/1', 'GET', 'admin', [], true)['note'];
+        $this->makeJsonRequest('/v1/notes/1', 'PUT', 'user', ['text' => $note['text']], true);
+    }
+
     public function testUpdateNonexistent()
     {
-        $responseData = $this->makeJsonRequest('/v1/notes/999', 'PUT', 'admin', ['text'=>'11'], false);
+        $responseData = $this->makeJsonRequest('/v1/notes/999', 'PUT', 'admin', ['text' => '11'], false);
         $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
+
     public function testEmptyParams1()
     {
-        $responseData = $this->makeJsonRequest('/v1/notes/999', 'PUT', 'admin', [], false);
+        $responseData = $this->makeJsonRequest('/v1/notes/1', 'PUT', 'admin', [], false);
         $this->assertEquals('empty_parameters', $responseData['error_type'], print_r($responseData, 1));
 
-        $responseData = $this->makeJsonRequest('/v1/notes/999', 'PUT', 'user', ['user_id'=>'11'], false);
+        $responseData = $this->makeJsonRequest('/v1/notes/1', 'PUT', 'user', ['user_id' => '11'], false);
         $this->assertEquals('empty_parameters', $responseData['error_type'], print_r($responseData, 1));
     }
 }

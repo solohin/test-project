@@ -140,6 +140,14 @@ class NotesController extends BasicController
             $userIdFilter = $this->app['user']->getID();
         }
 
+        if (!$this->service->getOne($id, $userIdFilter)) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'Note not found.',
+                'error_type' => ErrorTypes::NOTE_NOT_FOUND,
+            ], 404);
+        }
+
         $note = [
             'text' => $request->get('text'),
             'calories' => $request->get('calories'),
@@ -162,15 +170,8 @@ class NotesController extends BasicController
         }
 
         try {
-            $success = $this->service->update($id, $note, $userIdFilter);
-            $response = ['success' => $success];
-            if ($success) {
-                return new JsonResponse($response);
-            } else {
-                $response['error_message'] = 'Note not found';
-                $response['error_type'] = ErrorTypes::NOTE_NOT_FOUND;
-                return new JsonResponse($response, 404);
-            }
+            $this->service->update($id, $note, $userIdFilter);
+            return new JsonResponse(['success' => true]);
         } catch (\Exception $e) {
             return $this->jsonException($e);
         }

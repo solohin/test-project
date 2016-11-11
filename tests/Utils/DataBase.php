@@ -16,7 +16,7 @@ class DataBase
 
     public static function getTestDBParams()
     {
-        if (self::DB_TYPE === 'sqlite') {
+        if (self::DB_TYPE === 'mysql') {
             return [
                 "driver" => "pdo_sqlite",
                 "memory" => true

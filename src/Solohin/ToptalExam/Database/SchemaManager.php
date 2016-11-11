@@ -37,7 +37,6 @@ class SchemaManager
         if ($flush && $schema->tablesExist($tableName)) {
             $this->drop($tableName);
         }
-        //TODO add indexes
 
         if (!$schema->tablesExist($tableName)) {
             $users = new Table($tableName);
@@ -48,6 +47,7 @@ class SchemaManager
             $users->addColumn('password_hash', 'string', ['length' => 255]);
             $users->addColumn('roles', 'string', ['length' => 255]);
             $users->addColumn('token', 'string', ['length' => 255]);
+            $users->addUniqueIndex(['token']);
             $users->addColumn('daily_normal', 'integer', ['unsigned' => true, 'default' => 2000]);
 
             $schema->createTable($users);
@@ -73,6 +73,10 @@ class SchemaManager
             $users->addColumn('time', 'integer', ['unsigned' => true]);//count of seconds from 00:00
             $users->addColumn('date', 'integer', ['unsigned' => true]);//timestamp
             $users->addColumn('text', 'text');
+
+            $users->addIndex(['time', 'date']);
+            $users->addIndex(['date']);
+            $users->addIndex(['time']);
 
             $schema->createTable($users);
         }
