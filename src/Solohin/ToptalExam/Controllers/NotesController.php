@@ -31,10 +31,10 @@ class NotesController extends BasicController
         try {
             $notes = $this->service->getAll(
                 $userId,
-                $request->get('from_date'),
-                $request->get('to_date'),
-                $request->get('from_time'),
-                $request->get('to_time'),
+                $request->get('from_date') ?: null,
+                $request->get('to_date') ?: null,
+                $request->get('from_time') ?: null,
+                $request->get('to_time') ?: null,
                 $request->get('page', 1)
             );
             $response = ['success' => true];

@@ -68,6 +68,11 @@ $routesLoader->bindRoutesToControllers();
 $securityLoader = new SecurityLoader($app);
 $securityLoader->initTokenSecurity();
 
+//main page
+$app->get('/', function () use ($app) {
+    return $app->redirect('/app.html');
+});
+
 //Fallback
 $app->match("/{anything}", function () use ($app) {
     return new JsonResponse([
@@ -81,7 +86,10 @@ $app->match("/{anything}", function () use ($app) {
 $app->error(function (Exception $e, $code) use ($app) {
     $app['monolog']->addError($e->getMessage());
     $app['monolog']->addError($e->getTraceAsString());
-    return new JsonResponse(array("statusCode" => $code, "message" => $e->getMessage(), "stacktrace" => $e->getTraceAsString()));
-});
+    return new JsonResponse([
+        'success' => false,
+        'error_message' => 'Something goes wrong',
+        'error_type' => ErrorTypes::INTERNAL_ERROR
+    ], 404);});
 
 return $app;
