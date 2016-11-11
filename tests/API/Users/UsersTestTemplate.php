@@ -50,16 +50,12 @@ class UsersTestTemplate extends WebTestCase
         $this->usersService = new UsersService($this->app['db']);
 
         //Create users
-        $id = $this->usersService->insert($this->dummyUsers['user']);
-        $this->dummyUsers['user'] = $this->usersService->getOne($id);
-
-        $id = $this->usersService->insert($this->dummyUsers['admin']);
-        $this->dummyUsers['admin'] = $this->usersService->getOne($id);
-
-        $id = $this->usersService->insert($this->dummyUsers['manager']);
-        $this->dummyUsers['manager'] = $this->usersService->getOne($id);
-
-        $this->usersService->insert($this->dummyUsers['user2']);
+        foreach(['user','admin','manager','user2'] as $type){
+            $id = $this->usersService->insert($this->dummyUsers[$type]);
+            $user = $this->usersService->getOne($id);
+            $user['password'] = $this->dummyUsers[$type]['password'];
+            $this->dummyUsers[$type] = $user;
+        }
     }
 
     public function setUp()

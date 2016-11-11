@@ -68,6 +68,97 @@ class UsersController extends BasicController
         }
     }
 
+    public function update($id, Request $request)
+    {
+        /** @var $this ->service UsersService */
+        $role = $this->app['user']->getRoles()[0];
+        $userToEdit = $this->service->getOne($id);
+
+        //Check edit permissions
+        if (!$this->ICanEditUser($userToEdit)) {
+            return new JsonResponse([
+                'success' => false,
+                'error_message' => 'You can not edit this user',
+                'error_type' => ErrorTypes::PERMISSION_DENIED,
+            ], 403);
+        }
+
+        $username = $request->get('username', null);
+        $newRole = $request->get('role', null);
+        $dailyNormal = $request->get('daily_normal', null);
+
+        //prepare data
+        if ($role == UserRoles::ROLE_ADMIN) {
+            //its ok
+        } elseif ($role == UserRoles::ROLE_MANAGER) {
+            $username = null;
+            if ($newRole == UserRoles::ROLE_ADMIN) {
+                return new JsonResponse([
+                    'success' => false,
+                    'error_message' => 'You can not set admin role',
+                    'error_type' => ErrorTypes::PERMISSION_DENIED,
+                ], 403);
+            }
+        } else {
+            $username = null;
+            $newRole = null;
+        }
+
+        //check data
+        if ($dailyNormal !== null) {
+            $dailyNormal = (int)$dailyNormal;
+        }
+
+        if ($dailyNormal !== null && $dailyNormal > self::MAX_NORMAL || $dailyNormal < self::MIN_NORMAL) {
+            $dailyNormal = self::DEFAULT_NORMAL;
+        }
+        if (!in_array($newRole, [UserRoles::ROLE_MANAGER, UserRoles::ROLE_ADMIN, UserRoles::ROLE_USER])) {
+            $newRole = null;
+        }
+
+        //check for doubles
+        if ($username !== null) {
+            if ($this->service->getByUsername($username)) {
+                return new JsonResponse([
+                    'success' => false,
+                    'error_message' => 'User with the same username exists',
+                    'error_type' => ErrorTypes::USERNAME_EXISTS,
+                ], 403);
+            }
+        }
+
+        //make user object
+        $user = [];
+        if (!is_null($username)) {
+            $user['username'] = $username;
+        }
+        if (!is_null($newRole)) {
+            $user['roles'] = [$newRole];
+        }
+        if (!is_null($dailyNormal)) {
+            $user['daily_normal'] = $dailyNormal;
+        }
+
+        try {
+            $success = $this->service->update($id, $user);
+            $response = ['success' => $success];
+            if ($success) {
+                return new JsonResponse($response);
+            } else {
+                $response['error_message'] = 'User not found';
+                $response['error_type'] = ErrorTypes::USER_NOT_FOUND;
+                return new JsonResponse($response, 404);
+            }
+        } catch (\Exception $e) {
+            return $this->jsonException($e);
+        }
+    }
+
+    public function updateMe(Request $request)
+    {
+        return $this->update($this->app['user']->getId(), $request);
+    }
+
     public function remove($id)
     {
         $toDelete = $this->service->getOne($id);

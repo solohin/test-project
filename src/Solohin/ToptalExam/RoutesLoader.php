@@ -71,11 +71,13 @@ class RoutesLoader
         //me routes
         $api->delete('/users/me', "users.controller:removeMe");
         $api->get('/users/me', "users.controller:getMe");
+        $api->put('/users/me', "users.controller:updateMe");
 
         //basic routes
         $api->delete('/users/{id}', "users.controller:remove");
         $api->get('/users/{id}', "users.controller:getOne");
         $api->get('/users/', "users.controller:getAll");
+        $api->put('/users/{id}', "users.controller:update");
 
         //no-slash aliases
         $api->get('/users', "users.controller:getAll");

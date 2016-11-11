@@ -86,10 +86,11 @@ class UsersService extends BaseService
 
     public static function hashPassword($password)
     {
+        $cost = 12;
         if (defined('THIS_IS_PHPUNIT')) {
-            return $password . $password . $password . $password;
+            $cost = 4;
         }
-        return password_hash($password, PASSWORD_DEFAULT);
+        return password_hash($password, PASSWORD_DEFAULT, ['cost' => $cost]);
     }
 
     private function prepareToSave($user, $insert = false)
@@ -110,13 +111,12 @@ class UsersService extends BaseService
             $user['token'] = $this->generateUniqueToken();
         }
 
-        if(isset($user['daily_normal'])){
+        if (isset($user['daily_normal'])) {
             if ($user['daily_normal'] < 0) {
                 $user['daily_normal'] = 0;
             }
             $user['daily_normal'] = intval($user['daily_normal']);
         }
-
 
 
         if (isset($user['password'])) {
