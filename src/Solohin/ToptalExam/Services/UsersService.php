@@ -126,7 +126,37 @@ class UsersService extends BaseService
         return $user;
     }
 
-    public function getAll($page = 1, $limit = 500)
+    public function hasMorePages($page = 1){
+        $limit = 500;//Hardcoded
+        $sql = "SELECT (COUNT(id) > ?) as has FROM users ";
+        $params = [];
+
+        //Limits
+        $limit = intval($limit);
+        if ($limit > 500 || $limit < 1) {
+            $limit = 500;
+        }
+        $page = intval($page);
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $sql .= ' LIMIT 100000 OFFSET ?';
+        $params[] = [$limit, PDO::PARAM_INT];
+        $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
+
+        //sql
+
+        $statement = $this->db->prepare($sql);
+        foreach ($params as $index => $param) {
+            $statement->bindValue($index + 1, $param[0], $param[1]);
+        }
+        $statement->execute();
+        $row = $statement->fetch();
+
+        return !!$row['has'];
+    }
+    public function getAll($page = 1)
     {
         $limit = 500;//Hardcoded
         $sql = "SELECT id, username, password_hash as password, token, roles,daily_normal FROM users ";

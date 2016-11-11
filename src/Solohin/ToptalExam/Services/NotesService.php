@@ -21,7 +21,61 @@ class NotesService extends BaseService
         return $this->readFormat($result);
     }
 
-    public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1)
+    public function hasMorePages($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1)
+    {
+        $limit = 500;//Hardcoded
+        $sql = "
+            SELECT (COUNT(id) > ?) as has
+
+            FROM notes
+            WHERE 1=1";
+        $params = [];
+
+        //filters
+
+        $params[] = [$limit, PDO::PARAM_INT];
+
+        if ($userIdFilter !== null) {
+            $sql .= ' AND user_id = ?';
+            $params[] = [(int)$userIdFilter, PDO::PARAM_INT];
+        }
+        if ($fromDate !== null) {
+            $sql .= ' AND date >= ?';
+            $params[] = [$this->dateToTimestamp($fromDate), PDO::PARAM_INT];
+        }
+        if ($toDate !== null) {
+            $sql .= ' AND date <= ?';
+            $params[] = [$this->dateToTimestamp($toDate), PDO::PARAM_INT];
+        }
+        if ($fromTime !== null) {
+            $sql .= ' AND time >= ?';
+            $params[] = [$this->timeStringToSeconds($fromTime), PDO::PARAM_INT];
+        }
+        if ($toTime !== null) {
+            $sql .= ' AND time <= ?';
+            $params[] = [$this->timeStringToSeconds($toTime), PDO::PARAM_INT];
+        }
+
+        $page = intval($page);
+        if ($page < 1) {
+            $page = 1;
+        }
+
+        $sql .= ' ORDER BY id DESC LIMIT 1000000 OFFSET ?';
+        $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
+
+        //sql
+
+        $statement = $this->db->prepare($sql);
+        foreach ($params as $index => $param) {
+            $statement->bindValue($index + 1, $param[0], $param[1]);
+        }
+        $statement->execute();
+        $row = $statement->fetch();
+        return !!$row['has'];
+    }
+
+    public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1, $getPagesCount = false)
     {
         $limit = 500;//Hardcoded
         $sql = "

@@ -61,6 +61,7 @@ class UsersController extends BasicController
             $users = array_map([$this, 'transformUser'], $users);
 
             $response = ['success' => true];
+            $response['has_more_pages'] = $this->service->hasMorePages($request->get('page', 1));
             $response['users'] = $users;
             return new JsonResponse($response);
         } catch (\Exception $e) {

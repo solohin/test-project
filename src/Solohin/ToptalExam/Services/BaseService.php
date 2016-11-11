@@ -28,4 +28,6 @@ abstract class BaseService
 
     public abstract function update($id, $data);
 
+    public abstract function hasMorePages($page);
+
 }

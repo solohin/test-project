@@ -41,7 +41,7 @@ class NotesGetTest extends NotesTestTemplate
         $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes'];
         $this->assertArrayHasKey('username', $notes[0]);
         $this->assertEquals('dummyUser', $notes[0]['username']);
-        $this->assertEquals('dummyUser2', $notes[4]['username'], print_r($notes[4]));
+        $this->assertEquals('dummyUser2', $notes[4]['username'], print_r($notes[4],1));
     }
     public function testOrder()
     {
@@ -87,9 +87,20 @@ class NotesGetTest extends NotesTestTemplate
             ]);
         }
 
-        $firstPageCount = count($this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes']);
-        $secondPageCount = count($this->makeJsonRequest('/v1/notes', 'GET', 'admin', ['page' => 2], true)['notes']);
+        $firstPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true);
+        $secondPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', ['page' => 2], true);
+
+        $firstPageCount = count($firstPage['notes']);
+        $secondPageCount = count($secondPage['notes']);
         $this->assertEquals($startCount + $toAddCount, $firstPageCount + $secondPageCount);
+
+
+
+        $this->assertArrayHasKey('has_more_pages',$firstPage);
+        $this->assertTrue($firstPage['has_more_pages']);
+
+        $this->assertArrayHasKey('has_more_pages',$secondPage);
+        $this->assertFalse($secondPage['has_more_pages']);
     }
 
     public function testGetAllAdminDateFilter()

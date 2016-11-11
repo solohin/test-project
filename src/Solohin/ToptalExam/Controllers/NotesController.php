@@ -29,7 +29,8 @@ class NotesController extends BasicController
         }
 
         try {
-            $notes = $this->service->getAll(
+            $response = ['success' => true];
+            $response['notes'] = $this->service->getAll(
                 $userId,
                 $request->get('from_date') ?: null,
                 $request->get('to_date') ?: null,
@@ -37,9 +38,16 @@ class NotesController extends BasicController
                 $request->get('to_time') ?: null,
                 $request->get('page', 1)
             );
-            $response = ['success' => true];
-            $response['notes'] = $notes;
-            $response['total_calories'] = array_sum(array_column($notes, 'calories'));
+
+            $response['has_more_pages'] = $this->service->hasMorePages(
+                $userId,
+                $request->get('from_date') ?: null,
+                $request->get('to_date') ?: null,
+                $request->get('from_time') ?: null,
+                $request->get('to_time') ?: null,
+                $request->get('page', 1)
+            );;
+            $response['total_calories'] = array_sum(array_column($response['notes'], 'calories'));
             return new JsonResponse($response);
         } catch (\Exception $e) {
             return $this->jsonException($e);

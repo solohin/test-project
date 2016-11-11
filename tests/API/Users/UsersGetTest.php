@@ -47,9 +47,18 @@ class UsersGetTest extends UsersTestTemplate
             ]);
         }
 
-        $firstPageCount = count($this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true)['users']);
-        $secondPageCount = count($this->makeJsonRequest('/v1/users', 'GET', 'admin', ['page' => 2], true)['users']);
+        $firstPage = $this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true);
+        $secondPage = $this->makeJsonRequest('/v1/users', 'GET', 'admin', ['page' => 2], true);
+
+        $this->assertArrayHasKey('has_more_pages',$firstPage);
+        $this->assertTrue($firstPage['has_more_pages']);
+
+        $firstPageCount = count($firstPage['users']);
+        $secondPageCount = count($secondPage['users']);
         $this->assertEquals($startCount + $toAddCount, $firstPageCount + $secondPageCount);
+
+        $this->assertArrayHasKey('has_more_pages',$secondPage);
+        $this->assertFalse($secondPage['has_more_pages']);
     }
 
     public function testGetForAdmin()
