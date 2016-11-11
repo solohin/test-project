@@ -1,0 +1,9 @@
+.menu__item{
+    display: inline-block;
+}
+.menu__item:last-child:after{
+    content: '';
+}
+.menu__item:after{
+    content: ' |';
+}
