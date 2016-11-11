@@ -26,7 +26,7 @@ class NotesService extends BaseService
         $limit = 500;//Hardcoded
         $sql = "
             SELECT
-            notes.id, notes.text, notes.calories, notes.user_id, notes.date, notes.time,
+            notes.id, notes.text, notes.calories, notes.user_id, notes.date, notes.time, users.username,
 
             IFNULL(users.daily_normal,0) >=
             (

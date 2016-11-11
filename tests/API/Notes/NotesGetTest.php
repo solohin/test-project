@@ -36,6 +36,13 @@ class NotesGetTest extends NotesTestTemplate
         $totalCalories = $this->makeJsonRequest('/v1/notes', 'GET', 'user', [], true)['total_calories'];
         $this->assertEquals(2900, $totalCalories);
     }
+    public function testHasUserName()
+    {
+        $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes'];
+        $this->assertArrayHasKey('username', $notes[0]);
+        $this->assertEquals('dummyUser', $notes[0]['username']);
+        $this->assertEquals('dummyUser2', $notes[4]['username'], print_r($notes[4]));
+    }
     public function testOrder()
     {
         $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'user', [], true)['notes'];
@@ -63,7 +70,7 @@ class NotesGetTest extends NotesTestTemplate
     public function testGetAllManager()
     {
         $responseData = $this->makeJsonRequest('/v1/notes', 'GET', 'manager', [], false);
-        $this->assertEquals('permission_denied', $responseData['error_type'], print_r($responseData, 1));
+        $this->assertEquals('permission_denied', $responseData['error_type']);
     }
 
     public function testGetAllPaging()

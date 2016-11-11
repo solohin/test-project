@@ -42,7 +42,7 @@ class NotesTestTemplate extends WebTestCase
             'username' => 'dummyUser2',
             'password' => 'Dummy Password 12345',
             'roles' => ['ROLE_USER'],
-            'daily_normal'=>400
+            'daily_normal'=>1
         ]
     ];
 
@@ -119,6 +119,8 @@ class NotesTestTemplate extends WebTestCase
 
         $id = $usersService->insert($this->dummyUsers['manager']);
         $this->dummyUsers['manager'] = $usersService->getOne($id);
+
+        $usersService->insert($this->dummyUsers['user2']);
     }
 
     public function setUp()
