@@ -76,7 +76,7 @@ class NotesService extends BaseService
             $page = 1;
         }
 
-        $sql .= ' LIMIT ? OFFSET ?';
+        $sql .= ' ORDER BY id DESC LIMIT ? OFFSET ?';
         $params[] = [$limit, PDO::PARAM_INT];
         $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 
