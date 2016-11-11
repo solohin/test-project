@@ -252,6 +252,7 @@ Same as PUT /v1/users/[your id here]
 #### Error types
 Too obvious to explain.
 
+- internal_error
 - wrong_password
 - wrong_username
 - username_exists
@@ -262,4 +263,10 @@ Too obvious to explain.
 - method_not_found
 - wrong_token
 - no_token
-
+- note_not_found
+- user_not_found
+- empty_parameters
+- permission_denied
+- empty_user_id
+- wrong_date_format
+- wrong_time_format

@@ -150,8 +150,6 @@ class UsersController extends BasicController
         }
 
         try {
-
-
             $success = $this->service->update($id, $user);
             $response = ['success' => $success];
             if ($success) {
