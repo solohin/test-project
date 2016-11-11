@@ -1,4 +1,4 @@
-define(['router'], function (router) {
+define(['router', 'handlebars'], function (router) {
     var module = {
         role: '',
         getRole: function () {

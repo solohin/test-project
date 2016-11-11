@@ -7,8 +7,8 @@ define(
                 module.bindActions();
 
                 //TODO debug
-                $('.login__username').val('admin');
-                $('.login__password').val('253422å');
+                $('.login__username').val('dummyUser');
+                $('.login__password').val('Dummy Password 12345');
                 $('.login__form').submit();
             },
             bindActions: function () {

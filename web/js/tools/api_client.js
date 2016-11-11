@@ -24,17 +24,14 @@ define(function () {
                 password: password
             }, 'post', successHandler, fail, true);
         },
-        getNotes: function (dateFrom, dateTo, timeFrom, timeTo, success, fail) {
-            var successHandler = function (data) {
-                success(data['notes']);
-            };
-
+        getNotes: function (dateFrom, dateTo, timeFrom, timeTo, page, success, fail) {
             module.request('notes', {
+                page: page,
                 from_date: dateFrom,
                 to_date: dateTo,
                 from_time: timeFrom,
                 to_time: timeTo
-            }, 'get', successHandler, fail);
+            }, 'get', success, fail);
         },
         request: function (path, data, method, success, fail, skipHeaders) {
             var onRequestComplete = function (data) {

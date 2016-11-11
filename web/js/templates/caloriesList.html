@@ -2,9 +2,9 @@
     <div class="row menu">
         <div class="col m8 push-m2">
             <ul class="menu__container">
-                <li class="menu__item"><a href="#" data-role="exit">Exit</a></li>
-                <li class="menu__item"><a href="#" data-role="exit">Notes</a></li>
-                <li class="menu__item"><a href="#" data-role="exit">Users</a></li>
+                <li class="menu__item"><a href="#exit" data-role="exit">Exit</a></li>
+                <li class="menu__item"><a href="#calories_list" data-role="exit">Notes</a></li>
+                <li class="menu__item"><a href="#users_list" data-role="exit">Users</a></li>
             </ul>
         </div>
     </div>
@@ -12,18 +12,42 @@
         <div class="col m4 push-m2">
             <h4 class="caloriesList__header">Your calories</h4>
         </div>
-    </div>
-    <div class="row caloriesList__filterContainer">
-        <div class="col m4 push-m2">
-            Filter: <a href="#" class="caloriesList__daysFilter">any day</a> /
-            <a href="#" class="caloriesList__daysFilter">any time</a>.
-        </div>
         <div class="col m4 push-m2 s12 caloriesList__addContainer">
-            <a href="#" class="caloriesList__addNoteButt">
+            <a href="#addnode" class="caloriesList__addNoteButt">
                 <i class="material-icons small">note_add</i>
                 <br>
                 Add new note
             </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col m2  push-m2">Date from:</div>
+        <div class="col m2 push-m2">Date to:</div>
+        <div class="col m2 push-m2">Time from:</div>
+        <div class="col m2 push-m2">Time to:</div>
+    </div>
+    <div class="row caloriesList__filterContainer">
+        <div class="col m2  push-m2">
+            <input type="date" class="datepicker">
+        </div>
+        <div class="col m2 push-m2">
+            <input type="date" class="datepicker">
+        </div>
+        <div class="col m2 push-m2">
+            <select>
+                <option value="" disabled selected>Choose your option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
+        </div>
+        <div class="col m2 push-m2">
+            <select>
+                <option value="" disabled selected>Choose your option</option>
+                <option value="1">Option 1</option>
+                <option value="2">Option 2</option>
+                <option value="3">Option 3</option>
+            </select>
         </div>
     </div>
     <div class="row caloriesList__result">
@@ -32,29 +56,39 @@
                 <tr>
                     <th>Date</th>
                     <th>Time</th>
+                    <th>User</th>
                     <th>Text</th>
                     <th>Calories</th>
                     <th>Edit</th>
                 </tr>
+                {{#each notes}}
                 <tr>
-                    <td>Alvin</td>
-                    <td>Eclair</td>
-                    <td>$0.87</td>
-                    <td>Eclair</td>
+                    <td>{{date}}</td>
+                    <td>{{time}}</td>
+                    <td>{{username}}</td>
+                    <td>{{text}}</td>
+                    <td>{{calories}}</td>
                     <td>
-                        <a href="#" class="caloriesList__editRow">
+                        <a href="#editnode/{{id}}" class="caloriesList__editRow">
                             <i class="material-icons">mode_edit</i>
                         </a>
                     </td>
                 </tr>
+                {{/each}}
             </table>
         </div>
     </div>
     <div class="row caloriesList__pagination">
-        <div class="col m8 push-m2">
-            <a href="#" class="caloriesList__daysFilter">-> Next page</a>
-            <br>
-            <a href="#" class="caloriesList__daysFilter"><- Previous page</a>
+        <div class="col m4 push-m2">
+            {{#if show_next_page}}
+            <a href="#calories_list?page={{next_page}}" class="caloriesList__nextPage">-> Next page</a><br>
+            {{/if}}
+            {{#if show_prev_page}}
+            <a href="#calories_list?page={{prev_page}}" class="caloriesList__prevPage"><- Previous page</a>
+            {{/if}}
+        </div>
+        <div class="col m4 push-m2 caloriesList__total">
+            Total {{total_calories}} kcals on page
         </div>
     </div>
 </div>
