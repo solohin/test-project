@@ -62,8 +62,6 @@ class SchemaManager
         if ($flush && $schema->tablesExist($tableName)) {
             $this->drop($tableName);
         }
-        //TODO add indexes
-
         if (!$schema->tablesExist($tableName)) {
             $users = new Table($tableName);
             $users->addColumn('id', 'integer', ['unsigned' => true, 'autoincrement' => true]);

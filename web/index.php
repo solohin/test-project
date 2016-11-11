@@ -10,7 +10,8 @@ if (!defined('ROOT_PATH')) {
 
 $app = new Silex\Application();
 
-require __DIR__ . '/../config/dev.php';
+//require __DIR__ . '/../config/dev.php';
+require __DIR__ . '/../config/prod.php';
 require __DIR__ . '/../src/app.php';
 
 if ($runAppDirectly) {
