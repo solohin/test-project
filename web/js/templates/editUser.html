@@ -1,0 +1,26 @@
+<div class="container editUser">
+    {{{menu_html}}}
+    <div class="row">
+        <div class="col l4 m12 s12 push-l4">
+            <h4 class="editUser__header">User settings</h4>
+        </div>
+    </div>
+    <div class="row">
+        <form class="col l4 m12 s12 push-l4 editUser__form">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="editUser__dailyNormal" type="number" required class="validate" value="{{daily_normal}}">
+                    <label for="editUser__dailyNormal" class="active">Daily normal, kcal.</label>
+                </div>
+            </div>
+            <div class="row editNote__buttContainer">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                        <i class="material-icons right">save</i>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

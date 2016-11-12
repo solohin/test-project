@@ -22,6 +22,7 @@ define(
             onGetSuccess: function (data) {
                 var render = function () {
                     var templateData = data.note;
+                    templateData.menu_html = require('app').getMenu();
                     templateData.is_admin = isAdmin;
                     templateData.users = $.map(module.users, function (val) {
                         val.selected = (val.id == data.note.user_id);
@@ -33,7 +34,6 @@ define(
                     $('#app').hide().html(html).show('fast');
                     module.bindActions();
                 };
-
 
                 var isAdmin = (require('app').getRole() == 'ROLE_ADMIN');
                 if (isAdmin) { // get isersList

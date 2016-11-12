@@ -38,16 +38,25 @@ define(function () {
                 date: date,
                 time: time,
                 calories: calories,
-                user_id: user_id
+                user_id: user_id,
+                text: text
+            }, 'PUT', success, fail);
+        },
+        updateUser: function (id, username, role, daily_normal, success, fail) {
+            module.request('users/' + id, {
+                username: username,
+                role: role,
+                daily_normal: daily_normal
             }, 'PUT', success, fail);
         },
         getNote: function (id, success, fail) {
             module.request('notes/' + id, {}, 'get', success, fail);
         },
+        getUser: function (id, success, fail) {
+            module.request('users/' + id, {}, 'get', success, fail);
+        },
         getUsers: function (success, fail) {
-            module.request('users', {}, 'get', function (data) {
-                success(data.users);
-            }, fail);
+            module.request('users', {}, 'get', success, fail);
         },
         request: function (path, data, method, success, fail, skipHeaders) {
             var onRequestComplete = function (response) {
@@ -86,7 +95,9 @@ define(function () {
         getUsers: module.getUsers,
         getNotes: module.getNotes,
         getNote: module.getNote,
+        getUser: module.getUser,
         updateNote: module.updateNote,
+        updateUser: module.updateUser,
         register: module.register
     };
 });

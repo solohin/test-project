@@ -3,12 +3,15 @@ define(
         'modules/login',
         'modules/register',
         'modules/caloriesList',
-        'modules/editNote'
+        'modules/editNote',
+        'modules/editUser',
+        'modules/usersList'
     ], function (loginModule,
                  registerModule,
                  caloriesListModule,
-                 editNoteModule
-    ) {
+                 editNoteModule,
+                 editUserModule,
+                 usersListModule) {
         var module = {
             role: '',
             routers: [
@@ -16,9 +19,12 @@ define(
                 {'pattern': /^login/, action: loginModule.init},
                 {'pattern': /^calories_list.*/, action: caloriesListModule.init},
                 {'pattern': /^editNote.*/, action: editNoteModule.init},
+                {'pattern': /^users_list.*/, action: usersListModule.init},
                 {
-                    'pattern': /^users_list.*/, action: function () {
-                }
+                    'pattern': /^settings/,
+                    action: function () {
+                        editUserModule.init({'id': 'me'});
+                    }
                 }
             ],
             defaultAction: function () {

@@ -9,7 +9,7 @@ define(
             time_to: null,
             init: function (params) {
                 //TODO debug
-                location.hash = '#editNote?id=1268';
+                //location.hash = '#editNote?id=1268';
 
                 $('#app').hide().html(loadingTemplate).show('fast');
 
@@ -41,7 +41,7 @@ define(
                     module.time_to = params.time_to;
                 }
 
-                console.log('params from URL',params);
+                console.log('params from URL', params);
 
                 apiClient.getNotes(module.date_from, module.date_to, module.time_from, module.time_to, module.page, module.render, module.onFail);
             },
@@ -53,26 +53,35 @@ define(
             },
             render: function (data) {
                 console.log(data);
+
+                var notes = $.map(data.notes, function (val) {
+                    val['class'] = val.daily_normal ? '_green' : '_red';
+                    return val;
+                });
+
                 var templateData = {
-                    'notes': data.notes,
+                    'notes': notes,
                     'total_calories': data.total_calories,
                     'show_next_page': data.has_more_pages,
                     'show_prev_page': module.page > 1,
                     'next_page': module.page + 1,
-                    'prev_page': module.page - 1
+                    'prev_page': module.page - 1,
+                    'menu_html': require('app').getMenu()
                 };
                 var html = module.template(templateData);
                 $('#app').hide().html(html).show('fast');
                 module.bindActions();
                 module.roleFilters(require('app').getRole());
             },
-            roleFilters: function(role){
-                if(role == 'ROLE_ADMIN'){
+            roleFilters: function (role) {
+                if (role == 'ROLE_ADMIN') {
                     //nothing
-                }else if(role == 'ROLE_MANAGER'){
+                } else if (role == 'ROLE_MANAGER') {
                     location.hash = '#';//Can not access
-                    console.log('ROLE_MANAGER should not be here!');
-                }else{
+                    var err = 'ROLE_MANAGER should not be here!';
+                    console.log(err);
+                    Materialize.toast(err, 4000);
+                } else {
                     $('._roleUserHide').hide();
                 }
             },

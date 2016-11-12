@@ -1,13 +1,5 @@
 <div class="container caloriesList">
-    <div class="row menu">
-        <div class="col m8 push-m2">
-            <ul class="menu__container">
-                <li class="menu__item"><a href="#exit" data-role="exit">Exit</a></li>
-                <li class="menu__item"><a href="#calories_list" data-role="exit">Notes</a></li>
-                <li class="menu__item"><a href="#users_list" data-role="exit">Users</a></li>
-            </ul>
-        </div>
-    </div>
+    {{{menu_html}}}
     <div class="row">
         <div class="col m4 push-m2">
             <h4 class="caloriesList__header">Your calories</h4>
@@ -48,11 +40,11 @@
                     <th>Time</th>
                     <th class="_roleUserHide">User</th>
                     <th>Text</th>
-                    <th>Calories</th>
+                    <th>kcal</th>
                     <th>Edit</th>
                 </tr>
                 {{#each notes}}
-                <tr>
+                <tr class="caloriesList__note {{class}}">
                     <td>{{date}}</td>
                     <td>{{time}}</td>
                     <td class="_roleUserHide">{{username}}</td>

@@ -1,0 +1,39 @@
+<div class="container usersList">
+    {{{menu_html}}}
+    <div class="row">
+        <div class="col m4 push-m2">
+            <h4 class="usersList__header">App users</h4>
+        </div>
+        <div class="col m4 push-m2 s12 usersList__addContainer">
+            <a href="#adduser" class="usersList__addNoteButt">
+                <i class="material-icons small">note_add</i>
+                <br>
+                Add new user
+            </a>
+        </div>
+    </div>
+    <div class="row usersList__result">
+        <div class="col m8 push-m2">
+            <table class="bordered">
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Daily normal</th>
+                    <th>Edit</th>
+                </tr>
+                {{#each users}}
+                <tr class="">
+                    <td>{{id}}</td>
+                    <td>{{username}}</td>
+                    <td>{{daily_normal}}</td>
+                    <td>
+                        <a href="#editUser?id={{id}}" class="usersList__editRow">
+                            <i class="material-icons">mode_edit</i>
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+</div>
