@@ -28,26 +28,16 @@
     </div>
     <div class="row caloriesList__filterContainer">
         <div class="col m2  push-m2">
-            <input type="date" class="datepicker">
+            <input type="date" class="datepicker caloriesList__dateFrom">
         </div>
         <div class="col m2 push-m2">
-            <input type="date" class="datepicker">
+            <input type="date" class="datepicker caloriesList__dateTo">
         </div>
         <div class="col m2 push-m2">
-            <select>
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-            </select>
+            <input type="time" class="timepicker caloriesList__timeFrom">
         </div>
         <div class="col m2 push-m2">
-            <select>
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
-                <option value="3">Option 3</option>
-            </select>
+            <input type="time" class="timepicker caloriesList__timeTo">
         </div>
     </div>
     <div class="row caloriesList__result">
@@ -56,7 +46,7 @@
                 <tr>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>User</th>
+                    <th class="_roleUserHide">User</th>
                     <th>Text</th>
                     <th>Calories</th>
                     <th>Edit</th>
@@ -65,11 +55,11 @@
                 <tr>
                     <td>{{date}}</td>
                     <td>{{time}}</td>
-                    <td>{{username}}</td>
+                    <td class="_roleUserHide">{{username}}</td>
                     <td>{{text}}</td>
                     <td>{{calories}}</td>
                     <td>
-                        <a href="#editnode/{{id}}" class="caloriesList__editRow">
+                        <a href="#editNote?id={{id}}" class="caloriesList__editRow">
                             <i class="material-icons">mode_edit</i>
                         </a>
                     </td>

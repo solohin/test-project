@@ -1,5 +1,5 @@
 define(
-    ['text!templates/login.html', 'modules/register', 'tools/api_client'],
+    ['text!templates/login.html', 'modules/register', 'tools/api_client', 'handlebars'],
     function (template, registerModule, apiClient) {
         var module = {
             init: function () {

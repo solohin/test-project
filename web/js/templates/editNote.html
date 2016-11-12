@@ -1,0 +1,62 @@
+<div class="container editNote">
+    <div class="row menu">
+        <div class="col l8 m12 s12 push-l2">
+            <ul class="menu__container">
+                <li class="menu__item"><a href="#exit" data-role="exit">Exit</a></li>
+                <li class="menu__item"><a href="#calories_list" data-role="exit">Notes</a></li>
+                <li class="menu__item"><a href="#users_list" data-role="exit">Users</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col l4 m12 s12 push-l4">
+            <h4 class="editNote__header">Edit note</h4>
+        </div>
+    </div>
+    <div class="row">
+        <form class="col l4 m12 s12 push-l4 editNote__form">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="editNote__text" type="text" required class="validate" value="{{text}}">
+                    <label for="editNote__text" class="active">Text</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="editNote__calories" type="number" required class="validate" value="{{calories}}">
+                    <label for="editNote__calories" class="active">Calories</label>
+                </div>
+            </div>
+            {{#if is_admin}}
+            <div class="row">
+                <div class="input-field col s12">
+                    <select id="editNote__userId">
+                        {{#each users}}
+                        <option value="{{id}}" {{#if selected}}selected{{/if}}>#{{id}} {{username}}</option>
+                        {{/each}}
+                    </select>
+                    <label for="editNote__userId">User</label>
+                </div>
+            </div>
+            {{/if}}
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="editNote__date" type="text" required class="datepicker" value="{{date}}">
+                    <label for="editNote__date" class="active">Date</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="editNote__time" type="time" required class="validate" value="{{time}}">
+                    <label for="editNote__time" class="active">Time</label>
+                </div>
+            </div>
+            <div class="row editNote__buttContainer">
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                        <i class="material-icons right">save</i>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -62,6 +62,7 @@ class RegistrationController
         $id = $this->usersService->insert($user);
         $userFromDB = $this->usersService->getOne($id);
         $response['token'] = $userFromDB['token'];
+        $response['role'] = $userFromDB['roles'][0];
 
         //Make login subrequest
         $subRequest = Request::create('/' . $app["api.version"] . '/login', 'POST', [

@@ -33,16 +33,38 @@ define(function () {
                 to_time: timeTo
             }, 'get', success, fail);
         },
+        updateNote: function (id, text, date, time, calories, user_id, success, fail) {
+            module.request('notes/' + id, {
+                date: date,
+                time: time,
+                calories: calories,
+                user_id: user_id
+            }, 'PUT', success, fail);
+        },
+        getNote: function (id, success, fail) {
+            module.request('notes/' + id, {}, 'get', success, fail);
+        },
+        getUsers: function (success, fail) {
+            module.request('users', {}, 'get', function (data) {
+                success(data.users);
+            }, fail);
+        },
         request: function (path, data, method, success, fail, skipHeaders) {
-            var onRequestComplete = function (data) {
-                var successfulRequest = data.success;
-                delete data.success;
+            var onRequestComplete = function (response) {
+                if (response.responseJSON) {
+                    response = response.responseJSON;
+                }
+
+                var successfulRequest = response.success;
+                delete response.success;
                 if (successfulRequest) {
-                    success(data);
+                    success(response);
                 } else {
-                    fail(data);
+                    fail(response);
                 }
             };
+
+            method = method.toUpperCase();
 
             var ajaxSettings = {
                 url: module.baseUrl + path,
@@ -55,13 +77,16 @@ define(function () {
                 ajaxSettings['headers'] = {'X-AUTH-TOKEN': module.authToken};
             }
 
-            $.ajax(ajaxSettings).always(onRequestComplete);
+            $.ajax(ajaxSettings).fail(onRequestComplete).done(onRequestComplete);
         }
     };
 
     return {
         login: module.login,
+        getUsers: module.getUsers,
         getNotes: module.getNotes,
+        getNote: module.getNote,
+        updateNote: module.updateNote,
         register: module.register
     };
 });

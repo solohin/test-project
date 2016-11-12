@@ -39,7 +39,7 @@ class LoginController
             //all correct
             $response['success'] = true;
             $response['token'] = $user['token'];
-            $response['roles'] = $user['roles'];
+            $response['role'] = $user['roles'][0];
         }
         return new JsonResponse($response);
     }

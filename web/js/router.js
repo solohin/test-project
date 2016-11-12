@@ -2,18 +2,23 @@ define(
     [
         'modules/login',
         'modules/register',
-        'modules/caloriesList'
+        'modules/caloriesList',
+        'modules/editNote'
     ], function (loginModule,
                  registerModule,
-                 caloriesListModule) {
+                 caloriesListModule,
+                 editNoteModule
+    ) {
         var module = {
             role: '',
             routers: [
                 {'pattern': /^register/, action: registerModule.init},
                 {'pattern': /^login/, action: loginModule.init},
                 {'pattern': /^calories_list.*/, action: caloriesListModule.init},
+                {'pattern': /^editNote.*/, action: editNoteModule.init},
                 {
-                    'pattern': /^users_list.*/, action: function () {}
+                    'pattern': /^users_list.*/, action: function () {
+                }
                 }
             ],
             defaultAction: function () {
@@ -31,7 +36,7 @@ define(
                     for (var k = 0; k < couples.length; k++) {
                         var couple = couples[k].split('=');
                         if (couple.length == 2) {
-                            data[couple[0]] = couple[1];
+                            data[couple[0]] = decodeURIComponent(couple[1]);
                         }
                     }
                 }
