@@ -7,11 +7,10 @@ define(
                 module.bindActions();
 
                 //TODO debug
-                $('.login__username').val('dummyManager');
+                //$('.login__username').val('dummyManager');
+                $('.login__username').val('dummyAdmin');
+                //$('.login__username').val('dummyUser');
                 $('.login__password').val('Dummy Password 12345');
-                setTimeout(function(){
-                    $('.login__form').submit();
-                },100);
             },
             bindActions: function () {
                 $('.login__form').submit(module.onFormSubmit);

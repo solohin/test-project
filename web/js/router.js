@@ -5,21 +5,25 @@ define(
         'modules/caloriesList',
         'modules/editNote',
         'modules/editUser',
-        'modules/usersList'
+        'modules/usersList',
+        'modules/addUser'
     ], function (loginModule,
                  registerModule,
                  caloriesListModule,
                  editNoteModule,
                  editUserModule,
-                 usersListModule) {
+                 usersListModule,
+                 addUserModule) {
         var module = {
             role: '',
             routers: [
                 {'pattern': /^register/, action: registerModule.init},
                 {'pattern': /^login/, action: loginModule.init},
                 {'pattern': /^calories_list.*/, action: caloriesListModule.init},
-                {'pattern': /^editNote.*/, action: editNoteModule.init},
+                {'pattern': /^edit_note.*/, action: editNoteModule.init},
+                {'pattern': /^edit_user.*/, action: editUserModule.init},
                 {'pattern': /^users_list.*/, action: usersListModule.init},
+                {'pattern': /^add_user/, action: addUserModule.init},
                 {
                     'pattern': /^settings/,
                     action: function () {

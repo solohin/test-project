@@ -2,7 +2,7 @@
     {{{menu_html}}}
     <div class="row">
         <div class="col l4 m12 s12 push-l4">
-            <h4 class="editUser__header">User settings</h4>
+            <h4 class="editUser__header">{{#if id}}Edit user{{else}}Create user{{/if}}</h4>
         </div>
     </div>
     <div class="row">
@@ -13,6 +13,25 @@
                     <label for="editUser__dailyNormal" class="active">Daily normal, kcal.</label>
                 </div>
             </div>
+            {{#if is_user}}{{else}}
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="editUser__username" type="text" required class="validate" value="{{username}}">
+                    <label for="editUser__username" class="active">User name</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select id="editUser__role">
+                        {{#each possible_roles}}
+                        <option value="{{id}}" {{#if selected}}selected{{/if}}>{{title}}({{id}})</option>
+                        {{/each}}
+                    </select>
+                    <label for="editUser__role">Role</label>
+                </div>
+            </div>
+            {{/if}}
+            {{#if can_edit}}
             <div class="row editNote__buttContainer">
                 <div class="col s12">
                     <button class="btn waves-effect waves-light" type="submit" name="action">
@@ -21,6 +40,7 @@
                     </button>
                 </div>
             </div>
+            {{/if}}
         </form>
     </div>
 </div>

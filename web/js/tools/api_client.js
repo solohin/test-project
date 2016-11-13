@@ -4,7 +4,7 @@ define(function () {
         authToken: '',
         login: function (username, password, success, fail) {
             var successHandler = function (data) {
-                module.authToken = data.token;
+                module.setToken(data.token);
                 success(data);
             };
 
@@ -13,9 +13,19 @@ define(function () {
                 password: password
             }, 'post', successHandler, fail, true);
         },
+        setToken: function (token) {
+            module.authToken = token;
+            require('app').saveToken(token);
+        },
+        addUser: function (username, password, success, fail) {
+            module.request('register', {
+                username: username,
+                password: password
+            }, 'post', success, fail, true);
+        },
         register: function (username, password, success, fail) {
             var successHandler = function (data) {
-                module.authToken = data.token;
+                module.setToken(data.token);
                 success(data);
             };
 
@@ -43,11 +53,18 @@ define(function () {
             }, 'PUT', success, fail);
         },
         updateUser: function (id, username, role, daily_normal, success, fail) {
-            module.request('users/' + id, {
-                username: username,
-                role: role,
-                daily_normal: daily_normal
-            }, 'PUT', success, fail);
+            var data = {};
+            if (typeof username !== 'undefined') {
+                data.username = username;
+            }
+            if (typeof role !== 'undefined') {
+                data.role = role;
+            }
+            if (typeof daily_normal !== 'undefined') {
+                data.daily_normal = daily_normal;
+            }
+
+            module.request('users/' + id, data, 'PUT', success, fail);
         },
         getNote: function (id, success, fail) {
             module.request('notes/' + id, {}, 'get', success, fail);
@@ -59,16 +76,20 @@ define(function () {
             module.request('users', {}, 'get', success, fail);
         },
         request: function (path, data, method, success, fail, skipHeaders) {
-            var onRequestComplete = function (response) {
+            var onRequestComplete = function (response, textStatus, xhr) {
+                //for errors
                 if (response.responseJSON) {
                     response = response.responseJSON;
                 }
+                console.log(response, textStatus, xhr);
 
                 var successfulRequest = response.success;
                 delete response.success;
                 if (successfulRequest) {
                     success(response);
                 } else {
+                    console.log(path, data, method, success, fail, skipHeaders);
+
                     fail(response);
                 }
             };
@@ -87,6 +108,9 @@ define(function () {
             }
 
             $.ajax(ajaxSettings).fail(onRequestComplete).done(onRequestComplete);
+        },
+        getLastCode: function () {
+            return module.code;
         }
     };
 
@@ -94,10 +118,13 @@ define(function () {
         login: module.login,
         getUsers: module.getUsers,
         getNotes: module.getNotes,
+        setToken: module.setToken,
         getNote: module.getNote,
         getUser: module.getUser,
         updateNote: module.updateNote,
         updateUser: module.updateUser,
+        addUser: module.addUser,
+        getLastCode: module.getLastCode,
         register: module.register
     };
 });

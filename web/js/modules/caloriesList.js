@@ -8,9 +8,6 @@ define(
             time_from: null,
             time_to: null,
             init: function (params) {
-                //TODO debug
-                //location.hash = '#editNote?id=1268';
-
                 $('#app').hide().html(loadingTemplate).show('fast');
 
                 if (!params) {
@@ -43,7 +40,7 @@ define(
 
                 console.log('params from URL', params);
 
-                apiClient.getNotes(module.date_from, module.date_to, module.time_from, module.time_to, module.page, module.render, module.onFail);
+                apiClient.getNotes(module.date_from, module.date_to, module.time_from, module.time_to, module.page, module.render, require('app').onError);
             },
             template: require('handlebars').compile(template),
             onFail: function (data) {

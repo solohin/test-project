@@ -7,14 +7,9 @@ define(
                 $('#app').hide().html(loadingTemplate).show('fast');
                 console.log('params from URL', params);
                 module.userId = params.id;
-                apiClient.getUser(params.id, module.onGetSuccess, module.onFail);
+                apiClient.getUser(params.id, module.onGetSuccess, require('app').onError);
             },
             template: require('handlebars').compile(template),
-            onFail: function (data) {
-                console.log(data);
-                Materialize.toast(data.error_message, 4000);
-                location.hash = '#';
-            },
             users: null,
             onPostSuccess: function (data) {
                 Materialize.toast('User updated!', 4000);
@@ -25,6 +20,11 @@ define(
                 var templateData = data.user;
                 templateData.menu_html = app.getMenu();
                 templateData.is_user = (app.getRole() == 'ROLE_USER');
+                templateData.possible_roles = [
+                    {id:'ROLE_USER', title:'Regular user', selected: (templateData.role == 'ROLE_USER')},
+                    {id:'ROLE_ADMIN', title:'Administrator', selected: (templateData.role == 'ROLE_ADMIN')},
+                    {id:'ROLE_MANAGER', title:'User manager', selected: (templateData.role == 'ROLE_MANAGER')}
+                ];
 
                 var html = module.template(templateData);
                 $('#app').hide().html(html).show('fast');
@@ -34,11 +34,11 @@ define(
                 e.preventDefault();
                 apiClient.updateUser(
                     module.userId,
-                    null,
-                    null,
+                    $('#editUser__username').val(),
+                    $('#editUser__role').val(),
                     $('#editUser__dailyNormal').val(),
                     module.onPostSuccess,
-                    module.onFail
+                    require('app').onError
                 );
             },
             bindActions: function () {

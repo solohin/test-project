@@ -4,8 +4,8 @@
         <div class="col m4 push-m2">
             <h4 class="usersList__header">App users</h4>
         </div>
-        <div class="col m4 push-m2 s12 usersList__addContainer">
-            <a href="#adduser" class="usersList__addNoteButt">
+        <div class="col m4 push-m2 usersList__addContainer">
+            <a href="#add_user" class="usersList__addNoteButt">
                 <i class="material-icons small">note_add</i>
                 <br>
                 Add new user
@@ -27,9 +27,11 @@
                     <td>{{username}}</td>
                     <td>{{daily_normal}}</td>
                     <td>
-                        <a href="#editUser?id={{id}}" class="usersList__editRow">
+                        {{#if can_edit}}
+                        <a href="#edit_user?id={{id}}" class="usersList__editRow">
                             <i class="material-icons">mode_edit</i>
                         </a>
+                        {{/if}}
                     </td>
                 </tr>
                 {{/each}}

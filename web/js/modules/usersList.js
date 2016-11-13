@@ -16,14 +16,9 @@ define(
 
                 console.log('params from URL', params);
 
-                apiClient.getUsers(module.onGetSuccess, module.onFail);
+                apiClient.getUsers(module.onGetSuccess, require('app').onError);
             },
             template: require('handlebars').compile(template),
-            onFail: function (data) {
-                console.log(data);
-                Materialize.toast(data.error_message, 4000);
-                location.hash = '#';
-            },
             onGetSuccess: function (data) {
                 console.log(data);
 

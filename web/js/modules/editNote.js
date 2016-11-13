@@ -7,14 +7,9 @@ define(
                 $('#app').hide().html(loadingTemplate).show('fast');
                 console.log('params from URL', params);
                 module.noteId = params.id;
-                apiClient.getNote(params.id, module.onGetSuccess, module.onFail);
+                apiClient.getNote(params.id, module.onGetSuccess, require('app').onError);
             },
             template: require('handlebars').compile(template),
-            onFail: function (data) {
-                console.log(data);
-                Materialize.toast(data.error_message, 4000);
-                location.hash = '#';
-            },
             users: null,
             onPostSuccess: function (data) {
                 Materialize.toast('Note updated!', 4000);
@@ -55,7 +50,7 @@ define(
                     $('#editNote__calories').val(),
                     $('#editNote__userId').val(),
                     module.onPostSuccess,
-                    module.onFail
+                    require('app').onError
                 );
             },
             bindActions: function () {

@@ -7,8 +7,27 @@ define(
                 return module.role;
             },
             init: function () {
-                router.init();
+                module.restoreToken();
+
+                var successLogin = function (data) {
+                    module.handleAuthSuccess(data.user.role, true);
+                    router.init();
+                };
+                var loginFailed = router.init;
+
+                apiClient.getUser('me', successLogin, loginFailed);
             },
+
+            localStorageApiKey: 'calories_tracker_api_token',
+            restoreToken: function () {
+                var token = localStorage.getItem(module.localStorageApiKey);
+                apiClient.setToken(token);
+            },
+            saveToken: function (token) {
+                localStorage.setItem(module.localStorageApiKey, token);
+            },
+
+
             allUsers: null,
             getUsers: function (callback) {
                 if (module.allUsers === null) {
@@ -27,25 +46,44 @@ define(
                 }
 
             },
+
+
+            onError: function (data) {
+                console.log(data);
+                Materialize.toast(data.error_message, 4000);
+                if (data.error_type == 'no_token' || data.error_type == 'wrong_token') {
+                    location.hash = '#login';
+                }
+            },
             menuGenerator: require('handlebars').compile(menuTemplate),
             getMenu: function () {
                 var role = module.getRole();
-                return module.menuGenerator({
-                    role_admin: role == 'ROLE_ADMIN',
-                    role_user: role == 'ROLE_USER',
-                    role_manager: role == 'ROLE_MANAGER'
-                });
+                var data = {
+                    role_admin: (role == 'ROLE_ADMIN'),
+                    role_user: (role == 'ROLE_USER'),
+                    role_manager: (role == 'ROLE_MANAGER'),
+                    role: role
+                };
+                console.log('menu data', data);
+                return module.menuGenerator(data);
             },
-            handleAuthSuccess: function (role) {
+            handleAuthSuccess: function (role, stayOnThisPage) {
                 module.role = role;
-                if (role == 'ROLE_ADMIN') {
-                    location.hash = '#calories_list';
+
+                if (module.role == 'ROLE_ADMIN') {
+                    if(!stayOnThisPage){
+                        location.hash = '#users_list';
+                    }
                     Materialize.toast('You have admin permissions', 4000)
-                } else if (role == 'ROLE_MANAGER') {
-                    location.hash = '#users_list';
+                } else if (module.role == 'ROLE_MANAGER') {
+                    if(!stayOnThisPage){
+                        location.hash = '#users_list';
+                    }
                     Materialize.toast('You have manager permissions', 4000)
                 } else {
-                    location.hash = '#calories_list';
+                    if(!stayOnThisPage){
+                        location.hash = '#calories_list';
+                    }
                 }
             }
         };
@@ -54,7 +92,9 @@ define(
             init: module.init,
             getRole: module.getRole,
             getUsers: module.getUsers,
+            saveToken: module.saveToken,
             getMenu: module.getMenu,
+            onError: module.onError,
             handleAuthSuccess: module.handleAuthSuccess
         }
     }
