@@ -19,6 +19,7 @@ define(
                     var templateData = data.note;
                     templateData.menu_html = require('app').getMenu();
                     templateData.is_admin = isAdmin;
+                    templateData.title = 'Edit node';
                     templateData.users = $.map(module.users, function (val) {
                         val.selected = (val.id == data.note.user_id);
                         return val;
@@ -66,6 +67,21 @@ define(
                 $('#editNote__date').pickadate(params);
                 $('select').material_select();
                 $('.editNote__form').on('submit', module.onFormSubmit);
+
+                $('.editNote__deleteLink').click(module.deleteNote.onDeleteClick)
+            },
+            deleteNote: {
+                onDeleteClick: function(e){
+                    if (confirm('Are you sure you want to delete note from the database permanently?')) {
+                        apiClient.deleteNote(module.noteId, module.deleteNote.onSuccess, require('app').onError);
+                    } else {
+                        e.preventDefault();
+                    }
+                },
+                onSuccess: function(data){
+                    Materialize.toast('Note deleted!', 4000);
+                    location.hash = '#notes_list';
+                }
             }
         };
 

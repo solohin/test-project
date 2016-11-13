@@ -31,7 +31,11 @@ etc for this purpose.
 - You will not be marked on graphic design, however, do try to keep it 
 as tidy as possible.
 
-NOTE: Please keep in mind that this is the project that will be used to evaluate your skills. The project will be evaluated as if you were delivering it to a customer. We expect you to make sure that the app is fully functional and doesn’t have any obvious missing pieces. The deadline for the project is 2 weeks from today.
+NOTE: Please keep in mind that this is the project that will be used to 
+evaluate your skills. The project will be evaluated as if you were 
+delivering it to a customer. We expect you to make sure that the app is 
+fully functional and doesn’t have any obvious missing pieces. The 
+deadline for the project is 2 weeks from today.
 
 ## API documentation
 

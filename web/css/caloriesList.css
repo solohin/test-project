@@ -10,3 +10,10 @@
 .caloriesList__note._green{
     background-color: #c8e6c9;
 }
+.caloriesList__labels{
+    font-size: 12px;
+    margin-bottom: 0;
+}
+.caloriesList__filterButtContainer{
+    text-align: right;
+}

@@ -103,7 +103,7 @@ define(
                 }
                 var paramUrl = $.param(data);
 
-                var newHash = '#calories_list';
+                var newHash = '#notes_list';
                 if (paramUrl) {
                     newHash += '?' + paramUrl;
                 }
@@ -125,17 +125,17 @@ define(
                 var params = {
                     selectMonths: true,
                     selectYears: 15,
-                    format: 'dd.mm.yyyy',
-                    onSet: module.applyFilters
+                    format: 'dd.mm.yyyy'
                 };
 
                 module.dateFromPicker.pickadate(params).val(module.date_from);
                 module.dateToPicker.pickadate(params).val(module.date_to);
 
-                module.timeFromPicker.val(module.time_from).change(module.applyFilters);
-                module.timeToPicker.val(module.time_to).change(module.applyFilters);
+                module.timeFromPicker.val(module.time_from);
+                module.timeToPicker.val(module.time_to);
 
                 $('select').material_select();
+                $('.caloriesList__filterButt').click(module.applyFilters);
             }
         };
 

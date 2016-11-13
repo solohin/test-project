@@ -5,18 +5,18 @@
             <h4 class="caloriesList__header">Your calories</h4>
         </div>
         <div class="col m4 push-m2 s12 caloriesList__addContainer">
-            <a href="#addnode" class="caloriesList__addNoteButt">
+            <a href="#add_note" class="caloriesList__addNoteButt">
                 <i class="material-icons small">note_add</i>
                 <br>
                 Add new note
             </a>
         </div>
     </div>
-    <div class="row">
+    <div class="row caloriesList__labels">
         <div class="col m2  push-m2">Date from:</div>
         <div class="col m2 push-m2">Date to:</div>
-        <div class="col m2 push-m2">Time from:</div>
-        <div class="col m2 push-m2">Time to:</div>
+        <div class="col m1 push-m2">Time from:</div>
+        <div class="col m1 push-m2">Time to:</div>
     </div>
     <div class="row caloriesList__filterContainer">
         <div class="col m2  push-m2">
@@ -25,11 +25,14 @@
         <div class="col m2 push-m2">
             <input type="date" class="datepicker caloriesList__dateTo">
         </div>
-        <div class="col m2 push-m2">
+        <div class="col m1 push-m2">
             <input type="time" class="timepicker caloriesList__timeFrom">
         </div>
-        <div class="col m2 push-m2">
+        <div class="col m1 push-m2">
             <input type="time" class="timepicker caloriesList__timeTo">
+        </div>
+        <div class="col m2 push-m2 caloriesList__filterButtContainer">
+            <button class="btn btn-xs caloriesList__filterButt">Apply</button>
         </div>
     </div>
     <div class="row caloriesList__result">
@@ -63,10 +66,10 @@
     <div class="row caloriesList__pagination">
         <div class="col m4 push-m2">
             {{#if show_next_page}}
-            <a href="#calories_list?page={{next_page}}" class="caloriesList__nextPage">-> Next page</a><br>
+            <a href="#notes_list?page={{next_page}}" class="caloriesList__nextPage">-> Next page</a><br>
             {{/if}}
             {{#if show_prev_page}}
-            <a href="#calories_list?page={{prev_page}}" class="caloriesList__prevPage"><- Previous page</a>
+            <a href="#notes_list?page={{prev_page}}" class="caloriesList__prevPage"><- Previous page</a>
             {{/if}}
         </div>
         <div class="col m4 push-m2 caloriesList__total">

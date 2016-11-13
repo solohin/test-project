@@ -52,6 +52,15 @@ define(function () {
                 text: text
             }, 'PUT', success, fail);
         },
+        addNote: function (text, date, time, calories, user_id, success, fail) {
+            module.request('notes', {
+                date: date,
+                time: time,
+                calories: calories,
+                user_id: user_id,
+                text: text
+            }, 'POST', success, fail);
+        },
         updateUser: function (id, username, role, daily_normal, success, fail) {
             var data = {};
             if (typeof username !== 'undefined') {
@@ -67,7 +76,13 @@ define(function () {
             module.request('users/' + id, data, 'PUT', success, fail);
         },
         getNote: function (id, success, fail) {
-            module.request('notes/' + id, {}, 'get', success, fail);
+            module.request('notes/' + id, {}, 'GET', success, fail);
+        },
+        deleteNote: function (id, success, fail) {
+            module.request('notes/' + id, {}, 'DELETE', success, fail);
+        },
+        deleteUser: function (id, success, fail) {
+            module.request('users/' + id, {}, 'DELETE', success, fail);
         },
         getUser: function (id, success, fail) {
             module.request('users/' + id, {}, 'get', success, fail);
@@ -115,16 +130,25 @@ define(function () {
     };
 
     return {
-        login: module.login,
-        getUsers: module.getUsers,
-        getNotes: module.getNotes,
-        setToken: module.setToken,
+        addNote: module.addNote,
+        addUser: module.addUser,
+
+        deleteNote: module.deleteNote,
+        deleteUser: module.deleteUser,
+
         getNote: module.getNote,
+        getNotes: module.getNotes,
+
         getUser: module.getUser,
+        getUsers: module.getUsers,
+
+        getLastCode: module.getLastCode,
+        setToken: module.setToken,
+
         updateNote: module.updateNote,
         updateUser: module.updateUser,
-        addUser: module.addUser,
-        getLastCode: module.getLastCode,
+
+        login: module.login,
         register: module.register
     };
 });

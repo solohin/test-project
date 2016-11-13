@@ -32,8 +32,8 @@ define(
             getUsers: function (callback) {
                 if (module.allUsers === null) {
                     var success = function (data) {
-                        module.allUsers = data;
-                        callback(data);
+                        module.allUsers = data.users;
+                        callback(module.allUsers);
                     };
                     var fail = function (data) {
                         console.log(data);
@@ -51,7 +51,7 @@ define(
             onError: function (data) {
                 console.log(data);
                 Materialize.toast(data.error_message, 4000);
-                if (data.error_type == 'no_token' || data.error_type == 'wrong_token') {
+                if ($.inArray(data.error_type, ['no_token', 'wrong_token', 'user_not_found', 'note_not_found'])) {
                     location.hash = '#login';
                 }
             },
@@ -71,18 +71,18 @@ define(
                 module.role = role;
 
                 if (module.role == 'ROLE_ADMIN') {
-                    if(!stayOnThisPage){
+                    if (!stayOnThisPage) {
                         location.hash = '#users_list';
                     }
                     Materialize.toast('You have admin permissions', 4000)
                 } else if (module.role == 'ROLE_MANAGER') {
-                    if(!stayOnThisPage){
+                    if (!stayOnThisPage) {
                         location.hash = '#users_list';
                     }
                     Materialize.toast('You have manager permissions', 4000)
                 } else {
-                    if(!stayOnThisPage){
-                        location.hash = '#calories_list';
+                    if (!stayOnThisPage) {
+                        location.hash = '#notes_list';
                     }
                 }
             }
