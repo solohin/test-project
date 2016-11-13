@@ -54,6 +54,21 @@ define(
                 $('#editUser__date').pickadate(params);
                 $('select').material_select();
                 $('.editUser__form').on('submit', module.onFormSubmit);
+                $('.editUser__deleteLink').click(module.deleteUser.onDeleteClick)
+
+            },
+            deleteUser: {
+                onDeleteClick: function(e){
+                    if (confirm('Are you sure you want to delete user from the database permanently?')) {
+                        apiClient.deleteUser(module.userId, module.deleteUser.onSuccess, require('app').onError);
+                    } else {
+                        e.preventDefault();
+                    }
+                },
+                onSuccess: function(data){
+                    Materialize.toast('User deleted!', 4000);
+                    location.hash = '#users_list';
+                }
             }
         };
 
