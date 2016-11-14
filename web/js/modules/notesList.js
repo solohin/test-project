@@ -1,5 +1,5 @@
 define(
-    ['text!templates/caloriesList.html', 'tools/api_client', 'text!templates/loading.html', 'handlebars'],
+    ['text!templates/notesList.html', 'tools/api_client', 'text!templates/loading.html', 'handlebars'],
     function (template, apiClient, loadingTemplate) {
         var module = {
             page: 1,
@@ -110,14 +110,14 @@ define(
                 location.hash = newHash;
             },
             dateFromPicker: null,
-            dateToPicker: $('.caloriesList__dateTo'),
-            timeFromPicker: $('.caloriesList__timeFrom'),
-            timeToPicker: $('.caloriesList__timeTo'),
+            dateToPicker: $('.notesList__dateTo'),
+            timeFromPicker: $('.notesList__timeFrom'),
+            timeToPicker: $('.notesList__timeTo'),
             bindActions: function () {
-                module.dateFromPicker = $('.caloriesList__dateFrom');
-                module.dateToPicker = $('.caloriesList__dateTo');
-                module.timeFromPicker = $('.caloriesList__timeFrom');
-                module.timeToPicker = $('.caloriesList__timeTo');
+                module.dateFromPicker = $('.notesList__dateFrom');
+                module.dateToPicker = $('.notesList__dateTo');
+                module.timeFromPicker = $('.notesList__timeFrom');
+                module.timeToPicker = $('.notesList__timeTo');
 
                 $('.login__registerLink').click(module.onRegisterClick);
                 $('.login__form').submit(module.onFormSubmit);
@@ -135,7 +135,7 @@ define(
                 module.timeToPicker.val(module.time_to);
 
                 $('select').material_select();
-                $('.caloriesList__filterButt').click(module.applyFilters);
+                $('.notesList__filterButt').click(module.applyFilters);
             }
         };
 

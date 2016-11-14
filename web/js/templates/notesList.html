@@ -1,0 +1,79 @@
+<div class="container notesList">
+    {{{menu_html}}}
+    <div class="row">
+        <div class="col m4 push-m1">
+            <h4 class="notesList__header">Notes</h4>
+        </div>
+        <div class="col m6 push-m1 s12 notesList__addContainer">
+            <a href="#add_note" class="notesList__addNoteButt">
+                <i class="material-icons small">note_add</i>
+                <br>
+                Add new note
+            </a>
+        </div>
+    </div>
+    <div class="row notesList__labels">
+        <div class="col m2  push-m1">Date from:</div>
+        <div class="col m2 push-m1">Date to:</div>
+        <div class="col m2 push-m1">Time from:</div>
+        <div class="col m2 push-m1">Time to:</div>
+    </div>
+    <div class="row notesList__filterContainer">
+        <div class="col m2  push-m1">
+            <input type="date" class="datepicker notesList__dateFrom">
+        </div>
+        <div class="col m2 push-m1">
+            <input type="date" class="datepicker notesList__dateTo">
+        </div>
+        <div class="col m2 push-m1">
+            <input type="time" class="timepicker notesList__timeFrom">
+        </div>
+        <div class="col m2 push-m1">
+            <input type="time" class="timepicker notesList__timeTo">
+        </div>
+        <div class="col m2 push-m1 notesList__filterButtContainer">
+            <button class="btn btn-xs notesList__filterButt"><i class="material-icons left">filter_list</i>filter</button>
+        </div>
+    </div>
+    <div class="row notesList__result">
+        <div class="col m10 push-m1">
+            <table class="bordered">
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th class="_roleUserHide">User</th>
+                    <th>Text</th>
+                    <th>kcal</th>
+                    <th>Edit</th>
+                </tr>
+                {{#each notes}}
+                <tr class="notesList__note {{class}}">
+                    <td>{{date}}</td>
+                    <td>{{time}}</td>
+                    <td class="_roleUserHide">{{username}}</td>
+                    <td>{{text}}</td>
+                    <td>{{calories}}</td>
+                    <td>
+                        <a href="#edit_note?id={{id}}" class="notesList__editRow">
+                            <i class="material-icons">mode_edit</i>
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+    <div class="row notesList__pagination">
+        <div class="col m4 push-m1">
+            {{#if show_next_page}}
+            <a href="#notes_list?page={{next_page}}" class="notesList__nextPage">-> Next page</a><br>
+            {{/if}}
+            {{#if show_prev_page}}
+            <a href="#notes_list?page={{prev_page}}" class="notesList__prevPage"><- Previous page</a>
+            {{/if}}
+        </div>
+        <div class="col m4 push-m1 notesList__total">
+            Total {{total_calories}} kcals on page
+        </div>
+    </div>
+</div>

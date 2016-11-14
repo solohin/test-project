@@ -2,7 +2,7 @@ define(
     [
         'modules/login',
         'modules/register',
-        'modules/caloriesList',
+        'modules/notesList',
         'modules/editNote',
         'modules/editUser',
         'modules/usersList',
@@ -10,7 +10,7 @@ define(
         'modules/addNote',
     ], function (loginModule,
                  registerModule,
-                 caloriesListModule,
+                 notesListModule,
                  editNoteModule,
                  editUserModule,
                  usersListModule,
@@ -22,7 +22,7 @@ define(
             routers: [
                 {'pattern': /^register/, action: registerModule.init},
                 {'pattern': /^login/, action: loginModule.init},
-                {'pattern': /^notes_list.*/, action: caloriesListModule.init},
+                {'pattern': /^notes_list.*/, action: notesListModule.init},
                 {'pattern': /^edit_note.*/, action: editNoteModule.init},
                 {'pattern': /^edit_user.*/, action: editUserModule.init},
                 {'pattern': /^users_list.*/, action: usersListModule.init},

@@ -1,19 +1,19 @@
-.caloriesList__addContainer{
+.notesList__addContainer{
     text-align: right;
 }
-.caloriesList__total{
+.notesList__total{
     text-align: right;
 }
-.caloriesList__note._red{
+.notesList__note._red{
     background-color: #ffcdd2;
 }
-.caloriesList__note._green{
+.notesList__note._green{
     background-color: #c8e6c9;
 }
-.caloriesList__labels{
+.notesList__labels{
     font-size: 12px;
     margin-bottom: 0;
 }
-.caloriesList__filterButtContainer{
+.notesList__filterButtContainer{
     text-align: right;
 }

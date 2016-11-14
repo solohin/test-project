@@ -12,11 +12,11 @@ namespace Solohin\ToptalExam\Tests\Utils;
 
 class DataBase
 {
-    const DB_TYPE = 'sqlite';
+    const DB_TYPE = 'mysql';
 
     public static function getTestDBParams()
     {
-        if (self::DB_TYPE === 'mysql') {
+        if (self::DB_TYPE === 'sqlite') {
             return [
                 "driver" => "pdo_sqlite",
                 "memory" => true
@@ -26,7 +26,7 @@ class DataBase
                 "driver" => "pdo_mysql",
                 "user" => "root",
                 "password" => "",
-                "dbname" => "testdb",
+                "dbname" => "toptal",
                 "host" => "127.0.0.1",
             ];
         }

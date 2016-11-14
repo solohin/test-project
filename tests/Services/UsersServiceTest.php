@@ -10,8 +10,6 @@ use Solohin\ToptalExam\Services\UsersService;
 
 class UsersServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const ON_PAGE = 500;
-
     /** @var $usersService UsersService */
     private $usersService;
 
