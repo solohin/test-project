@@ -57,11 +57,10 @@ class UsersController extends BasicController
             ], 403);
         }
         try {
-            $users = $this->service->getAll($request->get('page', 1));
+            $users = $this->service->getAll();
             $users = array_map([$this, 'transformUser'], $users);
 
             $response = ['success' => true];
-            $response['has_more_pages'] = $this->service->hasMorePages($request->get('page', 1));
             $response['users'] = $users;
             return new JsonResponse($response);
         } catch (\Exception $e) {

@@ -36,6 +36,7 @@ class UsersGetTest extends UsersTestTemplate
         $this->assertArrayNotHasKey('password', $responseData[0]);
     }
 
+    //paging removed
     public function testPaging()
     {
         $startCount = count($this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true)['users']);
@@ -50,15 +51,12 @@ class UsersGetTest extends UsersTestTemplate
         $firstPage = $this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true);
         $secondPage = $this->makeJsonRequest('/v1/users', 'GET', 'admin', ['page' => 2], true);
 
-        $this->assertArrayHasKey('has_more_pages',$firstPage);
-        $this->assertTrue($firstPage['has_more_pages']);
+        $this->assertArrayNotHasKey('has_more_pages',$firstPage);
 
         $firstPageCount = count($firstPage['users']);
         $secondPageCount = count($secondPage['users']);
-        $this->assertEquals($startCount + $toAddCount, $firstPageCount + $secondPageCount);
-
-        $this->assertArrayHasKey('has_more_pages',$secondPage);
-        $this->assertFalse($secondPage['has_more_pages']);
+        $this->assertEquals($startCount + $toAddCount, $firstPageCount);
+        $this->assertEquals($startCount + $toAddCount, $secondPageCount);
     }
 
     public function testGetForAdmin()
