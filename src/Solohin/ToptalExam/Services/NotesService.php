@@ -7,6 +7,10 @@ use Solohin\ToptalExam\ErrorTypes;
 
 class NotesService extends BaseService
 {
+    const MAX_LIMIT = 500;
+    const MIN_LIMIT = 1;
+    const DEFAULT_LIMIT = 50;
+
     public function getOne($id, $userIdFilter = null)
     {
         $sql = "SELECT id, text, calories, user_id, date, time FROM notes WHERE id=?";
@@ -21,9 +25,12 @@ class NotesService extends BaseService
         return $this->readFormat($result);
     }
 
-    public function hasMorePages($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1)
+    public function hasMorePages($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1, $limit = 50)
     {
-        $limit = 500;//Hardcoded
+        $limit = (int)$limit;
+        if ($limit > self::MAX_LIMIT || $limit < self::MIN_LIMIT) {
+            $limit = self::DEFAULT_LIMIT;
+        }
         $sql = "
             SELECT (COUNT(id) > ?) as has
 
@@ -75,9 +82,12 @@ class NotesService extends BaseService
         return !!$row['has'];
     }
 
-    public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1, $getPagesCount = false)
+    public function getAll($userIdFilter = null, $fromDate = null, $toDate = null, $fromTime = null, $toTime = null, $page = 1, $limit = 50)
     {
-        $limit = 500;//Hardcoded
+        $limit = (int)$limit;
+        if ($limit > self::MAX_LIMIT || $limit < self::MIN_LIMIT) {
+            $limit = self::DEFAULT_LIMIT;
+        }
         $sql = "
             SELECT
             notes.id, notes.text, notes.calories, notes.user_id, notes.date, notes.time, users.username,

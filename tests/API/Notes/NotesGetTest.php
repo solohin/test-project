@@ -94,9 +94,9 @@ class NotesGetTest extends NotesTestTemplate
 
     public function testGetAllPaging()
     {
+        $onPage = 129;
         $startCount = count($this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes']);
-        $toAddCount = 500;
-        for ($i = 0; $i < $toAddCount; $i++) {
+        for ($i = 0; $i < $onPage; $i++) {
             $this->notesService->insert([
                 'text' => 'Some note',
                 'calories' => 100,
@@ -106,12 +106,12 @@ class NotesGetTest extends NotesTestTemplate
             ]);
         }
 
-        $firstPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true);
-        $secondPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', ['page' => 2], true);
+        $firstPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', ['on_page' => $onPage], true);
+        $secondPage = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', ['page' => 2, 'on_page' => $onPage], true);
 
         $firstPageCount = count($firstPage['notes']);
         $secondPageCount = count($secondPage['notes']);
-        $this->assertEquals($startCount + $toAddCount, $firstPageCount + $secondPageCount);
+        $this->assertEquals($startCount + $onPage, $firstPageCount + $secondPageCount);
 
 
         $this->assertArrayHasKey('has_more_pages', $firstPage);

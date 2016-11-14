@@ -146,7 +146,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - note[date] - Date of note in format "dd.mm.yyyy", for example "31.12.2016"
 
 #### GET /v1/notes/
-Get filtered notes list. 
+Get filtered paged notes list. 
 Works for ROLE_ADMIN or ROLE_USER(for owner)
 
 **Request**
@@ -157,6 +157,7 @@ Works for ROLE_ADMIN or ROLE_USER(for owner)
 - to_time - Optional filter note[time]. The same format. Midnight is 23:59. 
 - page - Optional page number starting from 1. Default = 1. 500 items per page
 - user_id - Optional user filter. Available only for ROLE_ADMIN
+- on_page - Notes on page. Min 1, max 500, default 50
 
 **Response**
 
@@ -207,20 +208,16 @@ Works for ROLE_MANAGER, ROLE_ADMIN or ROLE_USER(for owner)
 #### GET /v1/users/me
 Same as GET /v1/users/[your id here]
 
-#### GET /v1/notes/
-Get paged users list. 
+#### GET /v1/users/
+Get all users list without paging. 
 Works for ROLE_ADMIN or ROLE_MANAGER
-
-**Request**
-
-- page - Optional page number starting from 1. Default = 1. 500 users per page
 
 **Response**
 
-- success - Note has found or not
+- success - Request was successful
 - error_message - Error text for user (only if success === false)
 - error_type - error type constant (only if success === false)
-- notes - array, contains:
+- users - array, contains:
     - id - Note id
     - username - Username
     - role - ROLE_ADMIN, ROLE_USER or ROLE_MANAGER

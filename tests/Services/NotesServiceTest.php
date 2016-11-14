@@ -11,7 +11,6 @@ use Solohin\ToptalExam\Services\UsersService;
 
 class NotesServiceTest extends \PHPUnit_Framework_TestCase
 {
-    const ON_PAGE = 500;
     /** @var $notesService NotesService */
     private $notesService;
 
@@ -281,8 +280,9 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAllPaging()
     {
-        $startCount = count($this->notesService->getAll());
-        for ($i = 0; $i < self::ON_PAGE; $i++) {
+        $onPage = 142;
+        $startCount = count($this->notesService->getAll(null, null, null, null, null, $page = 1, $onPage));
+        for ($i = 0; $i < $onPage; $i++) {
             $this->notesService->insert([
                 'text' => 'Note #' . $i,
                 'calories' => 100,
@@ -291,22 +291,22 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
                 'date' => '01.01.2017',
             ]);
         }
-        $firstPage = $this->notesService->getAll();
+        $firstPage = $this->notesService->getAll(null, null, null, null, null, $page = 1, $onPage);
 
-        $this->assertCount(self::ON_PAGE, $firstPage);
+        $this->assertCount($onPage, $firstPage);
 
-        $secondPage = $this->notesService->getAll(null, null, null, null, null, $page = 2);
+        $secondPage = $this->notesService->getAll(null, null, null, null, null, $page = 2, $onPage);
 
         //Real pages
         $this->assertCount($startCount, $secondPage);
 
-        $thirdPage = $this->notesService->getAll(null, null, null, null, null, $page = 3);
+        $thirdPage = $this->notesService->getAll(null, null, null, null, null, $page = 3, $onPage);
 
         //Fake page
         $this->assertCount(0, $thirdPage);
 
-        $zeroPage = $this->notesService->getAll(null, null, null, null, null, $page = 0);
-        $minusOnePage = $this->notesService->getAll(null, null, null, null, null, $page = -1);
+        $zeroPage = $this->notesService->getAll(null, null, null, null, null, $page = 0, $onPage);
+        $minusOnePage = $this->notesService->getAll(null, null, null, null, null, $page = -1, $onPage);
 
         //And wrong pages is first page
         $this->assertEquals($firstPage, $zeroPage);
@@ -391,6 +391,7 @@ class NotesServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayIsPartOfArray($note, $newNote);
     }
+
     public function testUpdate1735()
     {
         $id = 1;

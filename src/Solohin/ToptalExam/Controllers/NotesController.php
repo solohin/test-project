@@ -36,7 +36,8 @@ class NotesController extends BasicController
                 $request->get('to_date') ?: null,
                 $request->get('from_time') ?: null,
                 $request->get('to_time') ?: null,
-                $request->get('page', 1)
+                $request->get('page', 1),
+                $request->get('on_page', null)
             );
 
             $response['has_more_pages'] = $this->service->hasMorePages(
@@ -45,7 +46,8 @@ class NotesController extends BasicController
                 $request->get('to_date') ?: null,
                 $request->get('from_time') ?: null,
                 $request->get('to_time') ?: null,
-                $request->get('page', 1)
+                $request->get('page', 1),
+                $request->get('on_page', null)
             );;
             $response['total_calories'] = array_sum(array_column($response['notes'], 'calories'));
             return new JsonResponse($response);
