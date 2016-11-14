@@ -22,9 +22,13 @@ define(
                 templateData.is_user = (app.getRole() == 'ROLE_USER');
                 templateData.possible_roles = [
                     {id:'ROLE_USER', title:'Regular user', selected: (templateData.role == 'ROLE_USER')},
-                    {id:'ROLE_ADMIN', title:'Administrator', selected: (templateData.role == 'ROLE_ADMIN')},
-                    {id:'ROLE_MANAGER', title:'User manager', selected: (templateData.role == 'ROLE_MANAGER')}
+                    {id:'ROLE_MANAGER', title:'User manager', selected: (templateData.role == 'ROLE_MANAGER')},
+                    {id:'ROLE_ADMIN', title:'Administrator', selected: (templateData.role == 'ROLE_ADMIN')}
                 ];
+
+                if(app.getRole() == 'ROLE_MANAGER'){
+                    templateData.possible_roles = templateData.possible_roles.splice(-1,1)
+                }
 
                 var html = module.template(templateData);
                 $('#app').hide().html(html).show('fast');
