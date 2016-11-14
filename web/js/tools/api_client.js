@@ -2,6 +2,7 @@ define(function () {
     var module = {
         baseUrl: 'http://localhost:8000/v1/',
         authToken: '',
+        notesOnPage: 50,
         login: function (username, password, success, fail) {
             var successHandler = function (data) {
                 module.setToken(data.token);
@@ -40,7 +41,8 @@ define(function () {
                 from_date: dateFrom,
                 to_date: dateTo,
                 from_time: timeFrom,
-                to_time: timeTo
+                to_time: timeTo,
+                on_page: module.notesOnPage
             }, 'get', success, fail);
         },
         updateNote: function (id, text, date, time, calories, user_id, success, fail) {
