@@ -27,7 +27,7 @@ define(
                 ];
 
                 if(app.getRole() == 'ROLE_MANAGER'){
-                    templateData.possible_roles = templateData.possible_roles.splice(-1,1)
+                    templateData.possible_roles.pop();
                 }
 
                 var html = module.template(templateData);
