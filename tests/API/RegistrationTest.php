@@ -135,7 +135,7 @@ class RegistrationTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk(), 'Response code is ' . $client->getResponse()->getStatusCode() . "\n" . 'Raw response is ' . $rawResponse);
         $this->assertArrayHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertTrue($responseData['success'], 'Raw response is ' . $rawResponse);
-        $this->assertEquals(['ROLE_USER'], $responseData['roles'], 'Raw response is ' . $rawResponse);
+        $this->assertEquals('ROLE_USER', $responseData['role'], 'Raw response is ' . $rawResponse);
     }
 
     public function setUp()

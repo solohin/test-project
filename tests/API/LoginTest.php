@@ -16,7 +16,7 @@ class LoginTest extends WebTestCase
     const DUMMY_USER = [
         'username' => 'DummyUser',
         'password' => 'Dummy Password 12345',
-        'roles' => 'ROLE_USER',
+        'roles' => ['ROLE_USER'],
         'token' => 'old token',
     ];
 
@@ -36,8 +36,8 @@ class LoginTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isOk(), 'Response code is ' . $client->getResponse()->getStatusCode() . "\n" . 'Raw response is ' . $rawResponse);
         $this->assertArrayHasKey('success', $responseData, 'Raw response is ' . $rawResponse);
         $this->assertArrayHasKey('token', $responseData, 'Raw response is ' . $rawResponse);
-        $this->assertArrayHasKey('roles', $responseData, 'Raw response is ' . $rawResponse);
-        $this->assertEquals(['ROLE_USER'], $responseData['roles'], 'Raw response is ' . $rawResponse);
+        $this->assertArrayHasKey('role', $responseData, 'Raw response is ' . $rawResponse);
+        $this->assertEquals('ROLE_USER', $responseData['role'], 'Raw response is ' . $rawResponse);
         $this->assertTrue($responseData['success'], 'Raw response is ' . $rawResponse);
     }
 

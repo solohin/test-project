@@ -25,6 +25,14 @@ class UsersUpdateTest extends UsersTestTemplate
         $this->assertEquals('ROLE_USER', $user['role']);
     }
 
+    public function testSameName()
+    {
+        $this->makeJsonRequest('/v1/users/1', 'PUT', 'admin', ['daily_normal' => '1000', 'username'=>'Same name'], true);
+        $this->makeJsonRequest('/v1/users/1', 'PUT', 'admin', ['daily_normal' => '12000', 'username'=>'Same name'], true);
+        $user = $this->makeJsonRequest('/v1/users/1', 'GET', 'admin', [], true)['user'];
+        $this->assertEquals(12000, $user['daily_normal']);
+    }
+
     public function testUserRoleChangeForManager()
     {
         //can not change role to admin

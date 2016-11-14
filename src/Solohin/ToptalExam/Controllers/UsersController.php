@@ -118,7 +118,7 @@ class UsersController extends BasicController
         }
 
         //check for doubles
-        if ($username !== null) {
+        if ($username !== null && $username !== $userToEdit['username']) {
             if ($this->service->getByUsername($username)) {
                 return new JsonResponse([
                     'success' => false,
