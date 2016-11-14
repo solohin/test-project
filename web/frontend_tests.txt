@@ -1,8 +1,12 @@
-- create account
-- log in
-- see list of meals and calories
++ create account
++ log in
++ see list of meals and calories
 - edit and delete calories notes
 - a regular user would only be able to CRUD on their owned records
+    + C
+    + R
+    - U
+    - D
 - a user manager would be able to CRUD users
     - C
     - R

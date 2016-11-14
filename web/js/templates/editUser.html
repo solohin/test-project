@@ -32,17 +32,19 @@
             </div>
             {{/if}}
             {{#if can_edit}}
-            <div class="row editUser__buttContainer">
-                <div class="col s12">
-                    <button class="btn waves-effect waves-light" type="submit" name="action">
-                        <i class="material-icons right">save</i>
-                        Save
-                    </button>
+                <div class="row editUser__buttContainer">
+                    <div class="col s12">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            <i class="material-icons right">save</i>
+                            Save
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div class="row editUser__deleteContainer">
-                <a href="#users_list" class="editUser__deleteLink">Delete this user</a>
-            </div>
+                {{#if is_user}}{{else}}
+                    <div class="row editUser__deleteContainer">
+                        <a href="#users_list" class="editUser__deleteLink">Delete this user</a>
+                    </div>
+                {/if}}
             {{/if}}
         </form>
     </div>
