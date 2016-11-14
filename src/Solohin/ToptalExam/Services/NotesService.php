@@ -61,7 +61,7 @@ class NotesService extends BaseService
             $page = 1;
         }
 
-        $sql .= ' ORDER BY id DESC LIMIT 1000000 OFFSET ?';
+        $sql .= ' ORDER BY date DESC, time DESC LIMIT 1000000 OFFSET ?';
         $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 
         //sql
@@ -130,7 +130,7 @@ class NotesService extends BaseService
             $page = 1;
         }
 
-        $sql .= ' ORDER BY id DESC LIMIT ? OFFSET ?';
+        $sql .= ' ORDER BY date DESC, time DESC LIMIT ? OFFSET ?';
         $params[] = [$limit, PDO::PARAM_INT];
         $params[] = [($page - 1) * $limit, PDO::PARAM_INT];
 

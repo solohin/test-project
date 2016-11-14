@@ -31,22 +31,41 @@ class NotesGetTest extends NotesTestTemplate
         $this->assertEquals(2900, $totalCalories);
     }
 
+    public function testSort()
+    {
+        $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes'];
+        $lastVal = PHP_INT_MAX;
+        foreach ($notes as $note) {
+            $noteDate = \DateTime::createFromFormat('d.m.Y H:i:s', $note['date'] . ' 00:00:00')->getTimestamp();
+
+            $tempTime = explode(':', $note['time']);
+            $hours = intval($tempTime[0]);
+            $minutes = intval($tempTime[1]);
+            $noteTime = $hours * 60 * 60 + $minutes * 60;
+
+            $this->assertLessThan($lastVal, $noteDate + $noteTime);
+            $lastVal = $noteDate + $noteTime;
+        }
+    }
+
     public function testTotalCalories()
     {
         $totalCalories = $this->makeJsonRequest('/v1/notes', 'GET', 'user', [], true)['total_calories'];
         $this->assertEquals(2900, $totalCalories);
     }
+
     public function testHasUserName()
     {
         $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'admin', [], true)['notes'];
         $this->assertArrayHasKey('username', $notes[0]);
         $this->assertEquals('dummyUser', $notes[0]['username']);
-        $this->assertEquals('dummyUser2', $notes[4]['username'], print_r($notes[4],1));
+        $this->assertEquals('dummyUser2', $notes[2]['username'], print_r($notes, 1));
     }
+
     public function testOrder()
     {
         $notes = $this->makeJsonRequest('/v1/notes', 'GET', 'user', [], true)['notes'];
-        $this->assertTrue($notes[0]['id'] > $notes[count($notes)-1]['id']);
+        $this->assertTrue($notes[0]['id'] > $notes[count($notes) - 1]['id']);
     }
 
     public function testDailyNormal()
@@ -95,11 +114,10 @@ class NotesGetTest extends NotesTestTemplate
         $this->assertEquals($startCount + $toAddCount, $firstPageCount + $secondPageCount);
 
 
-
-        $this->assertArrayHasKey('has_more_pages',$firstPage);
+        $this->assertArrayHasKey('has_more_pages', $firstPage);
         $this->assertTrue($firstPage['has_more_pages']);
 
-        $this->assertArrayHasKey('has_more_pages',$secondPage);
+        $this->assertArrayHasKey('has_more_pages', $secondPage);
         $this->assertFalse($secondPage['has_more_pages']);
     }
 
