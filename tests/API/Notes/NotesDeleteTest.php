@@ -50,4 +50,9 @@ class NotesDeleteTest extends NotesTestTemplate
         $responseData = $this->makeJsonRequest('/v1/notes/9999', 'DELETE', 'admin', [], false);
         $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
+    public function testDeleteWrongId()
+    {
+        $responseData = $this->makeJsonRequest('/v1/notes/textid', 'DELETE', 'admin', [], false);
+        $this->assertEquals('method_not_found', $responseData['error_type'], print_r($responseData, 1));
+    }
 }

@@ -67,6 +67,11 @@ class UsersDeleteTest extends UsersTestTemplate
         $response = $this->makeJsonRequest('/v1/users/9999', 'DELETE', 'admin', [], false);
         $this->assertEquals('user_not_found', $response['error_type']);
     }
+    public function testDeleteWrongId()
+    {
+        $response = $this->makeJsonRequest('/v1/users/WrongId', 'DELETE', 'admin', [], false);
+        $this->assertEquals('method_not_found', $response['error_type']);
+    }
 
     public function testDeleteMyself()
     {

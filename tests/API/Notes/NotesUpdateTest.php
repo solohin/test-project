@@ -106,6 +106,11 @@ class NotesUpdateTest extends NotesTestTemplate
         $responseData = $this->makeJsonRequest('/v1/notes/999', 'PUT', 'admin', ['text' => '11'], false);
         $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
+    public function testUpdateWrongid()
+    {
+        $responseData = $this->makeJsonRequest('/v1/notes/wrongid', 'PUT', 'admin', ['text' => '11'], false);
+        $this->assertEquals('method_not_found', $responseData['error_type'], print_r($responseData, 1));
+    }
 
     public function testEmptyParams1()
     {

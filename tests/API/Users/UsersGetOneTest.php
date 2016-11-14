@@ -57,6 +57,11 @@ class UsersGetOneTest extends UsersTestTemplate
         $responseData = $this->makeJsonRequest('/v1/users/3', 'get', 'user', [], false);
         $this->assertEquals('permission_denied', $responseData['error_type']);
     }
+    public function testGetOneWrongId()
+    {
+        $responseData = $this->makeJsonRequest('/v1/users/WrongId', 'get', 'user', [], false);
+        $this->assertEquals('method_not_found', $responseData['error_type']);
+    }
 
     public function testGetOneForUserOwner()
     {

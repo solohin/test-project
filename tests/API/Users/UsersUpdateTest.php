@@ -143,4 +143,9 @@ class UsersUpdateTest extends UsersTestTemplate
         $response = $this->makeJsonRequest('/v1/users/777', 'PUT', 'admin', [], false);
         $this->assertEquals('user_not_found', $response['error_type']);
     }
+    public function testUpdateWrongId()
+    {
+        $response = $this->makeJsonRequest('/v1/users/whdwif', 'PUT', 'admin', [], false);
+        $this->assertEquals('method_not_found', $response['error_type']);
+    }
 }

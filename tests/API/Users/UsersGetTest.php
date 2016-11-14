@@ -37,7 +37,7 @@ class UsersGetTest extends UsersTestTemplate
     }
 
     //paging removed
-    public function testPaging()
+    public function testNoPaging()
     {
         $startCount = count($this->makeJsonRequest('/v1/users', 'GET', 'admin', [], true)['users']);
         $toAddCount = 500;
@@ -80,5 +80,10 @@ class UsersGetTest extends UsersTestTemplate
     {
         $responseData = $this->makeJsonRequest('/v1/users', 'GET', 'user', [], false);
         $this->assertEquals('permission_denied', $responseData['error_type']);
+    }
+    public function testGetWrongId()
+    {
+        $responseData = $this->makeJsonRequest('/v1/users/WrongId', 'GET', 'user', [], false);
+        $this->assertEquals('method_not_found', $responseData['error_type']);
     }
 }

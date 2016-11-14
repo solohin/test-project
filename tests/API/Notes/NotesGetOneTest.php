@@ -32,6 +32,11 @@ class NotesGetOneTest extends NotesTestTemplate
         $responseData = $this->makeJsonRequest('/v1/notes/2', 'GET', 'user', [], false);
         $this->assertEquals('note_not_found', $responseData['error_type'], print_r($responseData, 1));
     }
+    public function testGetOneWrongId()
+    {
+        $responseData = $this->makeJsonRequest('/v1/notes/wrongid', 'GET', 'user', [], false);
+        $this->assertEquals('method_not_found', $responseData['error_type'], print_r($responseData, 1));
+    }
 
     public function testGetOneByAdmin()
     {

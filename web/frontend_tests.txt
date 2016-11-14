@@ -1,0 +1,27 @@
+- create account
+- log in
+- see list of meals and calories
+- edit and delete calories notes
+- a regular user would only be able to CRUD on their owned records
+- a user manager would be able to CRUD users
+    - C
+    - R
+    - U
+    - D
+- an admin would be able to CRUD all records and users
+    - users
+        - C
+        - R
+        - U
+        - D
+    - notes
+        - C
+        - R
+        - U
+        - D
+- Each entry has a date, time, text, and num of calories
+- User setting – Expected number of calories per day
+    - Change settings
+- When displayed, it goes green if the total for that day is less than expected number of calories per day, otherwise goes red
+
+

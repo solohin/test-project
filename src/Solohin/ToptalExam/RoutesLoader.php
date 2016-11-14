@@ -56,10 +56,10 @@ class RoutesLoader
     private function bindNotes(ControllerCollection &$api)
     {
         $api->post('/notes/', "notes.controller:add");
-        $api->put('/notes/{id}', "notes.controller:update");
-        $api->get('/notes/{id}', "notes.controller:getOne");
+        $api->put('/notes/{id}', "notes.controller:update")->assert('id', '\d+');
+        $api->get('/notes/{id}', "notes.controller:getOne")->assert('id', '\d+');
         $api->get('/notes/', "notes.controller:getList");
-        $api->delete('/notes/{id}', "notes.controller:remove");
+        $api->delete('/notes/{id}', "notes.controller:remove")->assert('id', '\d+');
 
         //no-slash aliases
         $api->get('/notes', "notes.controller:getList");
@@ -74,10 +74,10 @@ class RoutesLoader
         $api->put('/users/me', "users.controller:updateMe");
 
         //basic routes
-        $api->delete('/users/{id}', "users.controller:remove");
-        $api->get('/users/{id}', "users.controller:getOne");
+        $api->delete('/users/{id}', "users.controller:remove")->assert('id', '\d+');
+        $api->get('/users/{id}', "users.controller:getOne")->assert('id', '\d+');
         $api->get('/users/', "users.controller:getAll");
-        $api->put('/users/{id}', "users.controller:update");
+        $api->put('/users/{id}', "users.controller:update")->assert('id', '\d+');
 
         //no-slash aliases
         $api->get('/users', "users.controller:getAll");
