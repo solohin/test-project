@@ -5,11 +5,6 @@ define(
             init: function () {
                 $('#app').hide().html(template).show('fast');
                 module.bindActions();
-
-                $('.login__username').val('dummyManager');
-                $('.login__username').val('dummyAdmin');
-                $('.login__username').val('dummyUser');
-                $('.login__password').val('Dummy Password 12345');
             },
             bindActions: function () {
                 $('.login__form').submit(module.onFormSubmit);
