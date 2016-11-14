@@ -1,6 +1,6 @@
 define(function () {
     var module = {
-        baseUrl: 'http://localhost:8000/v1/',
+        baseUrl: '/v1/',
         authToken: '',
         notesOnPage: 50,
         login: function (username, password, success, fail) {
